@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "users" ALTER COLUMN "passport" DROP NOT NULL,
+ALTER COLUMN "cpf" DROP NOT NULL;
