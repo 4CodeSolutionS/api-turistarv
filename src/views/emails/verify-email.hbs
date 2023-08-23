@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<head>
+    <style>
+        .container{
+        font-family: Arial, Helvetica, sans-serif; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    img{
+        display: block;
+    }
+    span{
+        margin: 10px 0px;
+        display: block;
+    }
+
+    img{
+        width: 400px;
+        height: 250px;
+    }
+    main{
+        width: 200px;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="align-image">
+            <img src="https://i.imgur.com/wkyiBIr.png" alt="logo turistaRV">
+        </span>
+
+        <main>
+            <span>Olá <strong>{{name}}</strong>,</span>
+        
+            <span>Obrigado por registrar em nossa plataforma de turismo!</span>
+            <span>Precisamos de mais algumas informações para concluir seu registro, incluindo uma confirmação do seu endereço de e-mail.</span>
+            <span>Clique no link abaixo para confirmar seu endereço de e-mail:</span>
+        
+            <span><a href="{{link}}">{{link}}</a></span>
+
+            <span>
+            Se você tiver problemas, cole o URL acima em seu navegador.
+            </span>
+            
+            <span>
+            Atenciosamente, <strong>TuristaRV!</strong>
+            </span>
+        </main>
+    </div>
+</body>
+</html>

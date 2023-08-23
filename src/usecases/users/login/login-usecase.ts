@@ -1,9 +1,8 @@
-import { env } from "@/.env";
-import { fastifyApp } from "@/app";
 import { IUsersRepository } from "@/repositories/interface-users-repository";
 import { CredentialsInvalidError } from "@/usecases/errors/credentials-invalid-error";
 import { User } from "@prisma/client";
 import { compare } from "bcrypt";
+import { randomUUID } from "crypto";
 import 'dotenv/config'
 
 interface IRequestLoginAccount {
@@ -37,43 +36,16 @@ export class LoginUseCase{
         if(!passwordMatch){
             throw new CredentialsInvalidError()
         }
-        // cookie:{
-        //     cookieName: 'refreshToken',
-        //     signed: false
-        // },
-        // sign:{
-        //    
-        // },
+       
         // Criar access token
-
-        const accessToken = fastifyApp.jwt.sign(
-            {
-                role: findUserExists.role,
-            },
-            {
-                sub: findUserExists.id,
-                expiresIn: '10m'
-            }
-        )
-        // Converter Numero de quantidade de dias para Data
-
+       
         // Criar refresh token
-        const refreshToken = fastifyApp.jwt.sign(
-            {
-                role: findUserExists.role,
-            },
-            {
-                sub: findUserExists.id,
-                expiresIn: env.JWT_EXPIRES_IN_REFRESH_TOKEN
-            }
-        )
+        
         // Salvar refresh token no banco
 
-        // Enviar email de confirmação
-
         return {
-            accessToken,
-            refreshToken,
+            accessToken: randomUUID(),
+            refreshToken: randomUUID(),
             user: findUserExists
         }
     }

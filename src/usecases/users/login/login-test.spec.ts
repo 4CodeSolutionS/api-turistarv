@@ -16,7 +16,7 @@ describe("Login user (unit)", () => {
         await usersRepositoryInMemory.create({
             cpf: "12345678910",
             dateBirth: new Date('1999-06-01'),
-            email: 'email@test.com',
+            email: 'kaio-dev@outlook.com',
             gender: 'M',
             name: 'John Doe',
             phone: '77-77777-7777',
@@ -31,7 +31,7 @@ describe("Login user (unit)", () => {
 
     test("Should be able to login a account", async () => {
        const {user, accessToken, refreshToken} = await stu.execute({
-        email: 'email@test.com',
+        email: 'kaio-dev@outlook.com',
         password: '123456'
        })
 
@@ -40,8 +40,6 @@ describe("Login user (unit)", () => {
         accessToken,
         refreshToken
     })
-
-
        expect(user.id).toEqual(expect.any(String))
        expect(accessToken).toEqual(expect.any(String))
 

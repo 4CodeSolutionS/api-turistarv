@@ -4,23 +4,27 @@ import { EmailAlreadyExistsError } from "@/usecases/errors/email-already-exists-
 import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exists-error";
 import { RegisterUseCase } from "./register-usecase";
 import { CPFAlreadyExistsError } from "@/usecases/errors/cpf-already-exists-error";
+import { EtherealProvider } from "@/providers/MailProvider/implementations/provider-ethereal";
+// import { SendGridProvider } from "@/providers/MailProvider/implementations/provider-sendgrid";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
+let sendGrindProvider: EtherealProvider
 let stu: RegisterUseCase;
 
 describe("Register user (unit)", () => {
     beforeEach(() => {
         usersRepositoryInMemory = new InMemoryUsersRepository()
-        stu = new RegisterUseCase(usersRepositoryInMemory)
+        sendGrindProvider = new EtherealProvider()
+        stu = new RegisterUseCase(usersRepositoryInMemory, sendGrindProvider)
     });
 
-    test("Should be able to register a new account", async () => {
+    test.only("Should be able to register a new account", async () => {
         const { user } = await stu.execute({ 
             cpf: "12345678910",
             dateBirth: new Date('1999-06-01'),
             email: 'email@test.com',
             gender: 'M',
-            name: 'John Doe',
+            name: 'Kaio Moreira',
             phone: '77-77777-7777',
             password: '123456',
             rvLength: 10,

@@ -1,3 +1,5 @@
+import { env } from "@/.env";
+import { IMailProvider } from "@/providers/MailProvider/interface-mail-provider";
 import { IUsersRepository } from "@/repositories/interface-users-repository";
 import { CPFAlreadyExistsError } from "@/usecases/errors/cpf-already-exists-error";
 import { EmailAlreadyExistsError } from "@/usecases/errors/email-already-exists-error";
@@ -27,6 +29,7 @@ interface IResponseRegisterAccount {
 export class RegisterUseCase{
     constructor(
         private usersRepository: IUsersRepository,
+        private sendEmailProvider: IMailProvider,
     ) {}
 
     async execute({
@@ -79,6 +82,23 @@ export class RegisterUseCase{
             tugPlate,
             vehicleType
         })
+
+        // pegar template de verificaçao de email
+        const pathTemplate = './src/views/emails/verify-email.hbs'
+        
+        // gerar token valido por 3h
+        const token="XXX";
+        // formatar link com token
+        const link = `${env.APP_URL_LOCAL}/users/verify-email?token=${token}`
+
+        // enviar verificação de email
+        await this.sendEmailProvider.sendEmail(
+            email, 
+            name,
+            "Confirmação de email", 
+            link, 
+            pathTemplate
+        )
 
         return {
             user

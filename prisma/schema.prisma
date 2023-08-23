@@ -43,6 +43,7 @@ model User {
   rvPlate     String
   touristType Tourist
   vehicleType Vehicle
+  emailActive Boolean  @default(false)
   role        Role     @default(GUEST)
   createdAt   DateTime @default(now())
 

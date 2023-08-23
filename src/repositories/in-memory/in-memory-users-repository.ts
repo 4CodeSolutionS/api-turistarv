@@ -2,8 +2,7 @@ import { Prisma, $Enums, User, Role, Tourist, Vehicle } from "@prisma/client";
 import { IUsersRepository } from "../interface-users-repository";
 import { randomUUID } from "crypto";
 
-export class InMemoryUsersRepository implements IUsersRepository{
-    
+export class InMemoryUsersRepository implements IUsersRepository{    
     public users: User[] = []
     
     async create({
@@ -23,9 +22,10 @@ export class InMemoryUsersRepository implements IUsersRepository{
         vehicleType,
         Acommodation,
         Address,
+        emailActive,
+        role,
         Lead,
         Post,
-        role,
     }: Prisma.UserUncheckedCreateInput) {
         const user = {
             id: id ? id : randomUUID(),
@@ -45,6 +45,7 @@ export class InMemoryUsersRepository implements IUsersRepository{
             Address,
             Lead,
             Post,
+            emailActive: emailActive ? emailActive : false,
             role: role ? role : 'GUEST',
             cpf: cpf ? cpf : null,
             createdAt: new Date()
@@ -97,6 +98,16 @@ export class InMemoryUsersRepository implements IUsersRepository{
         }
 
         return user;
+    }
+
+    async activeEmail(id:string, activate = true) {
+        const userIndex = this.users.findIndex(user => user.id === id)
+
+        if(userIndex === -1){
+            return null
+        }
+
+        this.users[userIndex].emailActive = activate
     }
 
     async update({ 

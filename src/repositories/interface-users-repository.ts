@@ -7,6 +7,8 @@ export interface IUsersRepository {
     findByEmail(email:string): Promise<User | null>
     findByCPF(cpf:string): Promise<User | null>
     findByPassport(passport:string): Promise<User | null>
+
+    activeEmail(id:string, activate?: boolean): Promise<void | null>
     update(data:Prisma.UserUncheckedUpdateInput): Promise<User>
     delete(id:string): Promise<void>
 }
