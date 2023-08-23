@@ -31,6 +31,9 @@ export class EtherealProvider implements IMailProvider {
         link:string, 
         pathTemplate:string
   ): Promise<void> {
+    if(!this.client){
+        throw new Error("Ethereal client not initialized")
+    }
     // ler arquivo handlebars
     const readTemplate = fs.readFileSync(pathTemplate).toString("utf-8");
     // compilar o arquivo handlebars
