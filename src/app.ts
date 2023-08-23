@@ -19,7 +19,3 @@ fastifyApp.register(fastifyJwt,
 
 
 fastifyApp.register(fastifyCookie)
-
-export default { fastifyApp }
-
-

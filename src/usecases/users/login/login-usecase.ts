@@ -70,7 +70,6 @@ export class LoginUseCase{
         // Salvar refresh token no banco
 
         // Enviar email de confirmação
-        
 
         return {
             accessToken,
