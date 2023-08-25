@@ -1,4 +1,4 @@
-export interface IMailProvider {
+export interface IEthrealProvider {
     sendEmail(
         email: string, 
         name:string, 

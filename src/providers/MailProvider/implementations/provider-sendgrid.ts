@@ -3,9 +3,9 @@ import { env } from "@/.env";
 import 'dotenv/config'
 import fs from 'node:fs'
 import handlebars from "handlebars";
+import { ISendGridProvider } from '../interface-sendgrid-provider';
 
-// implements IMailProvider
-export class SendGridProvider{
+export class SendGridProvider implements ISendGridProvider{
     constructor(){
         sgMail.setApiKey(env.SENDGRID_API_KEY)
     }
@@ -22,7 +22,7 @@ export class SendGridProvider{
             // compilar o arquivo handlebars
             const compileTemplate = handlebars.compile(readTemplate);
             // passar variables for template
-            const htmlTemplate = compileTemplate({name, link});
+            const htmlTemplate = compileTemplate({name, link, email});
 
             const msg = {
                 to: `kaio-dev@outlook.com`, // Para 

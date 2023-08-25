@@ -1,9 +1,9 @@
 import fs from "fs";
 import handlebars from "handlebars";
 import nodemailer, { Transporter } from "nodemailer";
-import { IMailProvider } from "../interface-mail-provider";
+import { IEthrealProvider} from "../interface-ethreal-provider";
 
-export class EtherealProvider implements IMailProvider {
+export class EtherealProvider implements IEthrealProvider {
   private client!: Transporter;
 
   constructor() {
@@ -31,6 +31,8 @@ export class EtherealProvider implements IMailProvider {
         link:string, 
         pathTemplate:string
   ): Promise<void> {
+    console.log('entrou no sendEmail')
+
     if(!this.client){
         throw new Error("Ethereal client not initialized")
     }
@@ -39,7 +41,7 @@ export class EtherealProvider implements IMailProvider {
     // compilar o arquivo handlebars
     const compileTemplate = handlebars.compile(readTemplate);
     // passar variables for template
-    const htmlTemplate = compileTemplate({name, link});
+    const htmlTemplate = compileTemplate({name, link, email});
 
     const message = await this.client.sendMail({
       to: email,
