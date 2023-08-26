@@ -1,11 +1,15 @@
-import { env } from "@/.env";
-import { IMailProvider } from "@/providers/MailProvider/interface-mail-provider";
+import { env } from "@/env";
 import { IUsersRepository } from "@/repositories/interface-users-repository";
 import { CPFAlreadyExistsError } from "@/usecases/errors/cpf-already-exists-error";
 import { EmailAlreadyExistsError } from "@/usecases/errors/email-already-exists-error";
 import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exists-error";
 import { Tourist, User, Vehicle } from "@prisma/client";
 import { hash } from 'bcrypt'
+import 'dotenv/config'
+import { randomUUID } from "crypto";
+import { IDateProvider } from "@/providers/DateProvider/interface-date-provider";
+import { ITokensRepository } from "@/repositories/interface-tokens-repository";
+import { IMailProvider } from "@/providers/MailProvider/interface-mail-provider";
 
 interface IRequestRegisterAccount {
     cpf?: string
@@ -29,7 +33,9 @@ interface IResponseRegisterAccount {
 export class RegisterUseCase{
     constructor(
         private usersRepository: IUsersRepository,
-        private sendEmailProvider: IMailProvider,
+        private dayjsDateProvider: IDateProvider,
+        private usersTokensRepository: ITokensRepository,
+        private sendMailProvider: IMailProvider
     ) {}
 
     async execute({
@@ -87,12 +93,22 @@ export class RegisterUseCase{
         const pathTemplate = './src/views/emails/verify-email.hbs'
         
         // gerar token valido por 3h
-        const token="XXX";
+        const token = randomUUID()
+
+        // gerar data em horas
+        const expireDateHours = this.dayjsDateProvider.addHours(3)
+
+        // salvar token no banco
+       await this.usersTokensRepository.create({
+            idUser: user.id,
+            expireDate: expireDateHours,
+            token
+        })
         // formatar link com token
         const link = `${env.APP_URL_LOCAL}/users/verify-email?token=${token}`
 
         // enviar verificação de email
-        await this.sendEmailProvider.sendEmail(
+        await this.sendMailProvider.sendEmail(
             email, 
             name,
             "Confirmação de email", 

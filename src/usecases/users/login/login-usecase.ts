@@ -1,9 +1,12 @@
+import { env } from "@/env";
+import { IDateProvider } from "@/providers/DateProvider/interface-date-provider";
+import { ITokensRepository } from "@/repositories/interface-tokens-repository";
 import { IUsersRepository } from "@/repositories/interface-users-repository";
 import { CredentialsInvalidError } from "@/usecases/errors/credentials-invalid-error";
 import { User } from "@prisma/client";
 import { compare } from "bcrypt";
-import { randomUUID } from "crypto";
 import 'dotenv/config'
+import jwt from 'jsonwebtoken'
 
 interface IRequestLoginAccount {
     email: string,
@@ -18,6 +21,8 @@ interface IResponseLoginAccount {
 export class LoginUseCase{
     constructor(
         private usersRepository: IUsersRepository,
+        private usersTokensRepository: ITokensRepository,
+        private dayjsDateProvider: IDateProvider
     ) {}
 
     async execute({
@@ -38,14 +43,30 @@ export class LoginUseCase{
         }
        
         // Criar access token
+        const accessToken = jwt.sign({}, env.JWT_SECRET_ACCESS_TOKEN, {
+            subject: findUserExists.id,
+            expiresIn: env.JWT_EXPIRES_IN_ACCESS_TOKEN
+        }) 
        
         // Criar refresh token
-        
+        const refreshToken = jwt.sign({}, env.JWT_SECRET_REFRESH_TOKEN, {
+            subject: findUserExists.id,
+            expiresIn: env.JWT_EXPIRES_IN_ACCESS_TOKEN
+        }) 
+
+        // criar data de expiração do refresh token
+        const expireDateRefreshToken = this.dayjsDateProvider.addDays(10)
+
         // Salvar refresh token no banco
+        await this.usersTokensRepository.create({
+            idUser: findUserExists.id,
+            expireDate: expireDateRefreshToken,
+            token: refreshToken,
+        })
 
         return {
-            accessToken: randomUUID(),
-            refreshToken: randomUUID(),
+            accessToken,
+            refreshToken,
             user: findUserExists
         }
     }

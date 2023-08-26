@@ -1,4 +1,6 @@
-export interface ISendGridProvider {
+import { Message } from "./in-memory/in-memory-mail-provider";
+
+export interface IMailProvider {
     sendEmail(
         email: string, 
         name:string, 
@@ -6,4 +8,6 @@ export interface ISendGridProvider {
         link:string, 
         pathTemplate:string
     ): Promise<void>
+
+    findMessageSent(email: string): Promise<Message>
 }

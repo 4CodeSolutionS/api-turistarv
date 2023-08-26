@@ -4,14 +4,24 @@ import { LoginUseCase } from "./login-usecase";
 import { hash } from "bcrypt";
 import { CredentialsInvalidError } from "@/usecases/errors/credentials-invalid-error";
 import 'dotenv/config'
+import { InMemoryTokensRepository } from "@/repositories/in-memory/in-memory-tokens-repository";
+import { DayjsDateProvider } from "@/providers/DateProvider/implementations/provider-dayjs";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
+let usersTokensRepositoryInMemory: InMemoryTokensRepository;
+let dayjsDateProvider: DayjsDateProvider
 let stu: LoginUseCase;
 
 describe("Login user (unit)", () => {
     beforeEach(async () => {
         usersRepositoryInMemory = new InMemoryUsersRepository()
-        stu = new LoginUseCase(usersRepositoryInMemory)
+        usersTokensRepositoryInMemory = new InMemoryTokensRepository()
+        dayjsDateProvider = new DayjsDateProvider()
+        stu = new LoginUseCase(
+            usersRepositoryInMemory, 
+            usersTokensRepositoryInMemory, 
+            dayjsDateProvider
+        )
 
         await usersRepositoryInMemory.create({
             cpf: "12345678910",
@@ -35,13 +45,12 @@ describe("Login user (unit)", () => {
         password: '123456'
        })
 
-
-    console.log({
-        accessToken,
-        refreshToken
-    })
        expect(user.id).toEqual(expect.any(String))
        expect(accessToken).toEqual(expect.any(String))
+       expect(refreshToken).toEqual(expect.any(String))
+
+       const usersToken = await usersTokensRepositoryInMemory.findByToken(refreshToken)
+       expect(usersToken?.token).toEqual(refreshToken);
 
     });
 

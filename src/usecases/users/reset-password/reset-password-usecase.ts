@@ -1,16 +1,20 @@
 import { IUsersRepository } from "@/repositories/interface-users-repository";
 import { AccessTimeOutError } from "@/usecases/errors/access-time-out-error";
+import { EmailAlreadyExistsError } from "@/usecases/errors/email-already-exists-error";
 import 'dotenv/config'
 import { ITokensRepository } from "@/repositories/interface-tokens-repository";
 import { IDateProvider } from "@/providers/DateProvider/interface-date-provider";
 import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
+import { hash } from "bcrypt";
+import { User } from "@prisma/client";
+import { IEthrealProvider } from "@/providers/MailProvider/interface-ethreal-provider";
 
-interface IRequestVerifyEmail {
+interface IRequestResetPassword {
     token: string
-    email: string
+    password: string
 }
 
-export class VerifyEmailUseCase{
+export class ResetPasswordUseCase{
     constructor(
         private usersRepository: IUsersRepository,
         private usersTokensRepository: ITokensRepository,
@@ -19,16 +23,12 @@ export class VerifyEmailUseCase{
 
     async execute({
         token,
-        email
-    }:IRequestVerifyEmail):Promise<void>{
-        const findUserByEmail = await this.usersRepository.findByEmail(email)
-
-        if(!findUserByEmail){
-            throw new ResourceNotFoundError()
-        }
-
+        password
+    }:IRequestResetPassword):Promise<void>{
+        // buscar token no banco
         const findToken = await this.usersTokensRepository.findByToken(token)
 
+        // verifica se token foi encontrado
         if(!findToken){
             throw new ResourceNotFoundError()
         }
@@ -46,7 +46,19 @@ export class VerifyEmailUseCase{
             }
 
 
-        //atualizar emailActive para true
-        await this.usersRepository.activeEmail(findUserByEmail.id)
+        // buscar usuário no banco
+        const user = await this.usersRepository.findById(findToken.idUser) as User
+
+        // criptografar senha
+        const newPassword = await hash(password, 8)
+
+        // cira nova senha do usuario
+        user.password = newPassword
+        
+        // salvar usuario atualizado no banco
+        await this.usersRepository.create(user)
+
+        // deletar token do banco
+        await this.usersTokensRepository.delete(findToken.id)
     }
 }

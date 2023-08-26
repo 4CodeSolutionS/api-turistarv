@@ -1,11 +1,11 @@
 import sgMail from '@sendgrid/mail';
-import { env } from "@/.env";
+import { env } from "@/env";
 import 'dotenv/config'
 import fs from 'node:fs'
 import handlebars from "handlebars";
-import { ISendGridProvider } from '../interface-sendgrid-provider';
+import { IMailProvider} from '../interface-mail-provider';
 
-export class SendGridProvider implements ISendGridProvider{
+export class MailProvider implements IMailProvider{
     constructor(){
         sgMail.setApiKey(env.SENDGRID_API_KEY)
     }

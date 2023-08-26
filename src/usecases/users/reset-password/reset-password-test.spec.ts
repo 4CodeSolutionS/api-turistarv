@@ -1,12 +1,11 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
-import { VerifyEmailUseCase } from "./verify-email-usecase";
 import { hash } from "bcrypt";
 import { DayjsDateProvider } from "@/providers/DateProvider/implementations/provider-dayjs";
 import { InMemoryTokensRepository } from "@/repositories/in-memory/in-memory-tokens-repository";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
 import { RegisterUseCase } from "../register/register-usecase";
-import { AccessTimeOutError } from "@/usecases/errors/access-time-out-error";
+import { ResetPasswordUseCase } from "./reset-password-usecase";
+import { Token, User } from "@prisma/client";
 import { InMemoryMailProvider } from "@/providers/MailProvider/in-memory/in-memory-mail-provider";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
@@ -14,9 +13,9 @@ let usersTokensRepositoryInMemory: InMemoryTokensRepository;
 let dayjsDateProvider: DayjsDateProvider
 let sendMailProvider: InMemoryMailProvider
 let registerUseCase: RegisterUseCase;
-let stu: VerifyEmailUseCase;
+let stu: ResetPasswordUseCase;
 
-describe("Verify email user (unit)", () => {
+describe("Reset password (unit)", () => {
     beforeEach(async () => {
         usersRepositoryInMemory = new InMemoryUsersRepository()
         usersTokensRepositoryInMemory = new InMemoryTokensRepository()
@@ -28,11 +27,26 @@ describe("Verify email user (unit)", () => {
             usersTokensRepositoryInMemory,
             sendMailProvider
         )
-        stu = new VerifyEmailUseCase(
+        stu = new ResetPasswordUseCase(
             usersRepositoryInMemory, 
             usersTokensRepositoryInMemory,
             dayjsDateProvider
         )
+
+        await usersRepositoryInMemory.create({
+            cpf: "12345678910",
+            dateBirth: new Date('1999-06-01'),
+            email: 'user-test@email.com',
+            gender: 'M',
+            name: 'John Doe',
+            phone: '77-77777-7777',
+            password: await hash('123456', 8),
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
 
         vi.useFakeTimers()
     });
@@ -41,7 +55,7 @@ describe("Verify email user (unit)", () => {
         vi.useFakeTimers()
     })
 
-    test("Should be able to verify a new account", async () => {
+    test("Should be able to reset passwod account", async () => {
         const {user} = await registerUseCase.execute({
             cpf: "1234567891110",
             dateBirth: new Date('1999-06-01'),
@@ -56,60 +70,16 @@ describe("Verify email user (unit)", () => {
             tugPlate: 'ABC-1234',
             vehicleType: 'CAMPER',
         })
-        const userToken = await usersTokensRepositoryInMemory.findByUserId(user.id)
+        const userToken = await usersTokensRepositoryInMemory.findByUserId(user.id) as Token
 
         await stu.execute({ 
-            token: userToken?.token as string,
-            email: 'user1-test@email.com'
+            token: userToken.token,
+            password: '101010'
         });
 
-        const userActive = await usersRepositoryInMemory.findByEmail('user1-test@email.com')
+        const updateUserPassword = await usersRepositoryInMemory.findByEmail(user.email) as User
 
-        expect(userActive?.emailActive).toBe(true)
+        expect(updateUserPassword.password !== user.passport).toBeTruthy()
     });
 
-    test("Should not be able to verify a new account with Email already exists", async () => {
-        const email = 'email@notexists.com'
-
-       await expect(()=> stu.execute({ 
-        token: 'xxx',
-        email,
-    }),
-        ).rejects.toBeInstanceOf(ResourceNotFoundError)
-    });
-
-    test("Should not be able to verify a account with token not found", async () => {
-       await expect(()=> stu.execute({ 
-        token: 'xxx',
-        email: 'user1-test@email.com',
-    }),
-        ).rejects.toBeInstanceOf(ResourceNotFoundError)
-    });
-
-    test("Should not be able to verify a account with token expired", async () => {
-        vi.setSystemTime( new Date(2023, 8, 23, 19, 0, 0))
-        const {user} = await registerUseCase.execute({
-            cpf: "1234567891110",
-            dateBirth: new Date('1999-06-01'),
-            email: 'user1-test@email.com',
-            gender: 'M',
-            name: 'John Doe',
-            phone: '77-77777-7777',
-            password: await hash('123456', 8),
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
-        })
-        const userToken = await usersTokensRepositoryInMemory.findByUserId(user.id)
-
-        vi.setSystemTime( new Date(2023, 8, 23, 23, 0, 0))
-
-        await expect(()=> stu.execute({ 
-         token: userToken?.token as string,
-         email: 'user1-test@email.com',
-     }),
-         ).rejects.toBeInstanceOf(AccessTimeOutError)
-     });
 });

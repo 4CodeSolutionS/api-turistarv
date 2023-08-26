@@ -4,24 +4,25 @@ import nodemailer, { Transporter } from "nodemailer";
 import { IEthrealProvider} from "../interface-ethreal-provider";
 
 export class EtherealProvider implements IEthrealProvider {
-  private client!: Transporter;
+  private client: Transporter;
 
-  constructor() {
-    nodemailer
-      .createTestAccount()
-      .then((account) => {
-        const transporter = nodemailer.createTransport({
-          host: account.smtp.host,
-          port: account.smtp.port,
-          secure: account.smtp.secure,
-          auth: {
-            user: account.user,
-            pass: account.pass,
-          },
-        });
-        this.client = transporter;
-      })
-      .catch((error) => console.error(error));
+  constructor(client: Transporter) {
+    this.client = client
+  }
+
+  static async createTransporter(){
+    const account = await nodemailer.createTestAccount();
+
+    const transporter = nodemailer.createTransport({
+      host: account.smtp.host,
+      port: account.smtp.port,
+      secure: account.smtp.secure,
+      auth: {
+        user: account.user,
+        pass: account.pass,
+      },
+    });
+    return new EtherealProvider(transporter);
   }
 
   async sendEmail(
@@ -31,8 +32,6 @@ export class EtherealProvider implements IEthrealProvider {
         link:string, 
         pathTemplate:string
   ): Promise<void> {
-    console.log('entrou no sendEmail')
-
     if(!this.client){
         throw new Error("Ethereal client not initialized")
     }
@@ -42,14 +41,12 @@ export class EtherealProvider implements IEthrealProvider {
     const compileTemplate = handlebars.compile(readTemplate);
     // passar variables for template
     const htmlTemplate = compileTemplate({name, link, email});
-
     const message = await this.client.sendMail({
       to: email,
       from: "<noreply@rentx.com>",
       subject,
       html: htmlTemplate,
     });
-
     console.log("Message sent: %s", message.messageId);
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(message));
   }
