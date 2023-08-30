@@ -4,6 +4,19 @@ import { randomUUID } from "crypto";
 
 export class InMemoryTokensRepository implements ITokensRepository {
     public tokens: Token[] = []
+    
+    async findByUserAndToken(idUser: string, token: string){
+        const userToken = this.tokens.find(userToken => 
+                userToken.idUser === idUser &&
+                userToken.token === token
+            )
+
+        if(!userToken){
+            return null
+        }
+
+        return userToken;
+    }
 
     async create({
         idUser,
@@ -22,6 +35,7 @@ export class InMemoryTokensRepository implements ITokensRepository {
 
         return userToken
     }
+
    async findByToken(token: string) {
         const userToken = this.tokens.find(userToken => userToken.token === token)
 

@@ -4,7 +4,6 @@ import { EmailAlreadyExistsError } from "@/usecases/errors/email-already-exists-
 import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exists-error";
 import { RegisterUseCase } from "./register-usecase";
 import { CPFAlreadyExistsError } from "@/usecases/errors/cpf-already-exists-error";
-import { EtherealProvider } from "@/providers/MailProvider/implementations/provider-ethereal";
 import { DayjsDateProvider } from "@/providers/DateProvider/implementations/provider-dayjs";
 import { InMemoryTokensRepository } from "@/repositories/in-memory/in-memory-tokens-repository";
 import { InMemoryMailProvider } from "@/providers/MailProvider/in-memory/in-memory-mail-provider";

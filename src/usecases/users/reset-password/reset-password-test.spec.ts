@@ -79,7 +79,7 @@ describe("Reset password (unit)", () => {
 
         const updateUserPassword = await usersRepositoryInMemory.findByEmail(user.email) as User
 
-        expect(updateUserPassword.password !== user.passport).toBeTruthy()
+        expect(updateUserPassword.password !== user.password).toBeTruthy()
     });
 
 });

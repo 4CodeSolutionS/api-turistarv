@@ -4,10 +4,14 @@ import 'dotenv/config'
 import fs from 'node:fs'
 import handlebars from "handlebars";
 import { IMailProvider} from '../interface-mail-provider';
+import { Message } from '../in-memory/in-memory-mail-provider';
 
 export class MailProvider implements IMailProvider{
     constructor(){
         sgMail.setApiKey(env.SENDGRID_API_KEY)
+    }
+    findMessageSent(email: string): Promise<Message> {
+        throw new Error('Method not implemented.');
     }
 
     async sendEmail(
