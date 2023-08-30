@@ -59,16 +59,19 @@ export class RegisterUseCase{
             throw new EmailAlreadyExistsError()
         }
 
-        const findCPFAlreadyExists = await this.usersRepository.findByCPF(cpf as string)
+        if(cpf){
+            const findCPFAlreadyExists = await this.usersRepository.findByCPF(cpf)
 
-        if(findCPFAlreadyExists){
-            throw new CPFAlreadyExistsError()
+            if(findCPFAlreadyExists){
+                throw new CPFAlreadyExistsError()
+            }
         }
-
-        const findPassportAlreadyExists = await this.usersRepository.findByPassport(passport as string)
         
-        if(findPassportAlreadyExists){
-            throw new PassportAlreadyExistsError()
+        if(passport){
+            const findPassportAlreadyExists = await this.usersRepository.findByPassport(passport)
+            if(findPassportAlreadyExists){
+                throw new PassportAlreadyExistsError()
+            }
         }
 
         const criptingPassword = await hash(password, 8)
@@ -108,13 +111,13 @@ export class RegisterUseCase{
         const link = `${env.APP_URL_LOCAL}/users/verify-email?token=${token}`
 
         // enviar verificação de email
-        await this.sendMailProvider.sendEmail(
-            email, 
-            name,
-            "Confirmação de email", 
-            link, 
-            pathTemplate
-        )
+        // await this.sendMailProvider.sendEmail(
+        //     email, 
+        //     name,
+        //     "Confirmação de email", 
+        //     link, 
+        //     pathTemplate
+        // )
 
         return {
             user
