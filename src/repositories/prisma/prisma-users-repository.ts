@@ -1,8 +1,109 @@
-import { $Enums, Prisma, User } from "@prisma/client";
+import { $Enums, Prisma, Role, User } from "@prisma/client";
 import { IUsersRepository } from "../interface-users-repository";
 import { prisma } from "@/lib/prisma";
 
 export class PrismaUsersRepository implements IUsersRepository{
+    async findByIdCostumerPayment(id: string){
+        const user = await prisma.user.findFirst({
+            where:{
+                idCustomerAsaas: id
+            }
+        })
+        return user
+    }
+
+    async getUserSecurity(id: string){
+        const user = await prisma.user.findUnique({
+            where:{
+                id
+            },
+            select: {
+                id: true,
+                name: true,
+                cpf: true,
+                passport: true,
+                email: true,
+                emailActive: true,
+                dateBirth: true,
+                phone: true,
+                acommodations: true,
+                address: true,
+                leads: true,
+                posts: true,
+                gender: true,
+                role: true,
+                rvLength: true,
+                tugPlate: true,
+                rvPlate: true,
+                touristType: true,
+                vehicleType: true,
+                createdAt: true,
+            }
+        }) as unknown as User
+
+        return user
+    }
+
+    async changePassword(id: string, password: string){
+        const user = await prisma.user.update({
+            where: {
+                id
+            },
+            data:{
+                password
+            }
+        })
+    }
+
+    async updateIdCostumerPayment(idUser: string, idCustomerPayment: string){
+        const user = await prisma.user.update({
+            where: {
+                id: idUser
+            },
+            data:{
+                idCustomerAsaas: idCustomerPayment
+            },
+        })
+
+        return user
+    }
+
+    async turnAdmin(id: string){
+        const user = await prisma.user.update({
+            where:{
+                id
+            },
+            data:{
+                role: 'ADMIN' as Role
+            },
+            select: {
+                id: true,
+                name: true,
+                cpf: true,
+                passport: true,
+                email: true,
+                emailActive: true,
+                dateBirth: true,
+                phone: true,
+                acommodations: true,
+                address: true,
+                leads: true,
+                posts: true,
+                gender: true,
+                role: true,
+                rvLength: true,
+                tugPlate: true,
+                rvPlate: true,
+                touristType: true,
+                vehicleType: true,
+                createdAt: true,
+            }
+        }) as unknown as User
+
+
+        return user
+    }
+
     async findByCPF(cpf: string){
         const user = await prisma.user.findUnique({
             where: {cpf},
@@ -15,7 +116,10 @@ export class PrismaUsersRepository implements IUsersRepository{
                 emailActive: true,
                 dateBirth: true,
                 phone: true,
-                Acommodation: true,
+                acommodations: true,
+                address: true,
+                leads: true,
+                posts: true,
                 gender: true,
                 role: true,
                 rvLength: true,
@@ -42,7 +146,10 @@ export class PrismaUsersRepository implements IUsersRepository{
                 emailActive: true,
                 dateBirth: true,
                 phone: true,
-                Acommodation: true,
+                acommodations: true,
+                address: true,
+                leads: true,
+                posts: true,
                 gender: true,
                 role: true,
                 rvLength: true,
@@ -70,7 +177,10 @@ export class PrismaUsersRepository implements IUsersRepository{
                     emailActive: true,
                     dateBirth: true,
                     phone: true,
-                    Acommodation: true,
+                    acommodations: true,
+                    address: true,
+                    leads: true,
+                    posts: true,
                     gender: true,
                     role: true,
                     rvLength: true,
@@ -96,7 +206,10 @@ export class PrismaUsersRepository implements IUsersRepository{
                 emailActive: true,
                 dateBirth: true,
                 phone: true,
-                Acommodation: true,
+                acommodations: true,
+                address: true,
+                leads: true,
+                posts: true,
                 gender: true,
                 role: true,
                 rvLength: true,
@@ -119,11 +232,15 @@ export class PrismaUsersRepository implements IUsersRepository{
                 name: true,
                 cpf: true,
                 passport: true,
+                password: true,
                 email: true,
                 emailActive: true,
                 dateBirth: true,
                 phone: true,
-                Acommodation: true,
+                acommodations: true,
+                address: true,
+                leads: true,
+                posts: true,
                 gender: true,
                 role: true,
                 rvLength: true,
@@ -146,11 +263,15 @@ export class PrismaUsersRepository implements IUsersRepository{
                 name: true,
                 cpf: true,
                 passport: true,
+                password: true,
                 email: true,
                 emailActive: true,
                 dateBirth: true,
                 phone: true,
-                Acommodation: true,
+                acommodations: true,
+                address: true,
+                leads: true,
+                posts: true,
                 gender: true,
                 role: true,
                 rvLength: true,

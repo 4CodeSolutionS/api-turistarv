@@ -2,11 +2,77 @@ import { Prisma, $Enums, User, Role, Tourist, Vehicle } from "@prisma/client";
 import { IUsersRepository } from "../interface-users-repository";
 import { randomUUID } from "crypto";
 
-export class InMemoryUsersRepository implements IUsersRepository{    
+export class InMemoryUsersRepository implements IUsersRepository{
     public users: User[] = []
+    
+    async findByIdCostumerPayment(id: string){
+        const user = this.users.find(user => user.idCustomerAsaas === id)
+
+        if(!user){
+            return null
+        }   
+
+        return user
+    }
+
+    async getUserSecurity(id: string){
+        const user = this.users.find(user => user.id === id)
+
+    if(!user){
+        return null
+    }
+    const userSecurity:User = {
+        id: user.id,
+        idCustomerAsaas: user.idCustomerAsaas,
+        email: user.email,
+        cpf: user.cpf,
+        passport: user.passport,
+        name: user.name,
+        phone: user.phone,
+        gender: user.gender,
+        role: user.role,
+        dateBirth: user.dateBirth,
+        rvLength: user.rvLength,
+        tugPlate: user.tugPlate,
+        rvPlate: user.rvPlate,
+        touristType: user.touristType,
+        vehicleType: user.vehicleType,
+        emailActive: user.emailActive,
+        createdAt: user.createdAt,
+    } as User
+
+    return userSecurity;
+    }
+  
+    async changePassword(id: string, password: string){
+        const userIndex = this.users.findIndex(user => user.id === id)
+
+        if(userIndex === -1){
+            return null
+        }
+
+        this.users[userIndex].password = password
+    }
+
+    async updateIdCostumerPayment(idUser: string, idCustomerPayment: string){
+        const userIndex = this.users.findIndex(user => user.id === idUser)
+
+        this.users[userIndex].idCustomerAsaas = idCustomerPayment as string
+
+        return this.users[userIndex]
+    }
+
+    async turnAdmin(id: string){
+        const userIndex = this.users.findIndex(user => user.id === id)
+
+        this.users[userIndex].role = 'ADMIN'
+
+        return this.users[userIndex]
+    }    
     
     async create({
         id,
+        idCustomerAsaas,
         cpf,
         dateBirth,
         email,
@@ -20,15 +86,17 @@ export class InMemoryUsersRepository implements IUsersRepository{
         touristType,
         tugPlate,
         vehicleType,
-        Acommodation,
-        Address,
         emailActive,
         role,
-        Lead,
-        Post,
+        acommodations,
+        address,
+        leads,
+        posts,
+        tokens,
     }: Prisma.UserUncheckedCreateInput) {
         const user = {
             id: id ? id : randomUUID(),
+            idCustomerAsaas: idCustomerAsaas ? idCustomerAsaas : null,
             dateBirth: new Date(dateBirth),
             email,
             gender,
@@ -41,10 +109,11 @@ export class InMemoryUsersRepository implements IUsersRepository{
             touristType,
             tugPlate,
             vehicleType,
-            Acommodation,
-            Address,
-            Lead,
-            Post,
+            acommodations,
+            address,
+            leads,
+            posts,
+            tokens,
             emailActive: emailActive ? emailActive : false,
             role: role ? role : 'GUEST',
             cpf: cpf ? cpf : null,
@@ -112,37 +181,31 @@ export class InMemoryUsersRepository implements IUsersRepository{
 
     async update({ 
         id,
-        cpf,
         dateBirth,
         email,
         gender,
         name,
         passport,
-        password,
         phone,
         rvLength,
         rvPlate,
         touristType,
         tugPlate,
         vehicleType,
-        role,
     }:Prisma.UserUncheckedUpdateInput){
         const userIndex = this.users.findIndex(user => user.id === id)
         
-        this.users[userIndex].cpf = cpf as string | null
         this.users[userIndex].dateBirth = new Date(dateBirth as string)
         this.users[userIndex].email = email as string
         this.users[userIndex].gender = gender as string
         this.users[userIndex].name = name as string
         this.users[userIndex].passport = passport as string | null
-        this.users[userIndex].password = password as string
         this.users[userIndex].phone = phone as string
         this.users[userIndex].rvLength = new Prisma.Decimal(rvLength as string)
         this.users[userIndex].rvPlate = rvPlate as string
         this.users[userIndex].touristType = touristType as Tourist
         this.users[userIndex].tugPlate = tugPlate as string
         this.users[userIndex].vehicleType = vehicleType as Vehicle
-        this.users[userIndex].role = role as Role
 
         return this.users[userIndex]
     }

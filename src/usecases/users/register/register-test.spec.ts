@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import { EmailAlreadyExistsError } from "@/usecases/errors/email-already-exists-error";
-import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exists-error";
 import { RegisterUseCase } from "./register-usecase";
 import { CPFAlreadyExistsError } from "@/usecases/errors/cpf-already-exists-error";
 import { DayjsDateProvider } from "@/providers/DateProvider/implementations/provider-dayjs";
 import { InMemoryTokensRepository } from "@/repositories/in-memory/in-memory-tokens-repository";
 import { InMemoryMailProvider } from "@/providers/MailProvider/in-memory/in-memory-mail-provider";
+import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exists-error";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
 let usersTokensRepositoryInMemory: InMemoryTokensRepository;

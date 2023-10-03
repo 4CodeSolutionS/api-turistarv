@@ -11,41 +11,61 @@ describe('Register User (e2e)', ()=>{
         await fastifyApp.close()
     })
 
-    test('should be able to register a user with CPF', async()=>{
+    test('should be able to register a user', async()=>{
         const response = await request(fastifyApp.server).post('/api/users').send({
             name: 'Kaio Moreira',
-            email: 'user1@turistarv.test',
+            email: 'user1-dev@outlook.com',
             password: '123456',
-            dateBirth: '1995-05-05',
             gender: 'MASCULINO',
             phone: '11999999999',
             cpf: '123.789.565-65',
-            rvLength: 10,
-            tugPlate: 'ABC1234',
-            rvPlate: 'ABC1234',
-            touristType: 'CARAVANISTA',
-            vehicleType: 'MOTORHOME'
         })
             
         expect(response.statusCode).toEqual(201)
     })
 
-    test('should be able to register a user with Passport', async()=>{
-        const response = await request(fastifyApp.server).post('/api/users').send({
+    test('should not be able to register a user with email already exists', async()=>{
+        await request(fastifyApp.server).post('/api/users').send({
             name: 'Kaio Moreira',
-            email: 'user2@turistarv.test',
+            email: 'user1-dev@outlook.com',
             password: '123456',
-            dateBirth: '1995-05-05',
             gender: 'MASCULINO',
             phone: '11999999999',
-            passport: 'AB987654',
-            rvLength: 10,
-            tugPlate: 'ABC1234',
-            rvPlate: 'ABC1234',
-            touristType: 'CARAVANISTA',
-            vehicleType: 'MOTORHOME'
+            cpf: '123.789.565-65'
+        })
+
+        const response = await request(fastifyApp.server).post('/api/users').send({
+            name: 'Kaio Moreira',
+            email: 'user1-dev@outlook.com',
+            password: '123456',
+            gender: 'MASCULINO',
+            phone: '11999999999',
+            cpf: '123.789.565-65',
         })
             
-        expect(response.statusCode).toEqual(201)
+        expect(response.statusCode).toEqual(409)
     })
+
+    test('should not be able to register a user with cpf already exists', async()=>{
+        await request(fastifyApp.server).post('/api/users').send({
+            name: 'Kaio Moreira',
+            email: 'user2-dev@outlook.com',
+            password: '123456',
+            gender: 'MASCULINO',
+            phone: '11999999999',
+            cpf: '123.789.565-65',
+        })
+
+        const response = await request(fastifyApp.server).post('/api/users').send({
+            name: 'Kaio Moreira',
+            email: 'user1-dev@outlook.com',
+            password: '123456',
+            gender: 'MASCULINO',
+            phone: '11999999999',
+            cpf: '123.789.565-65',
+        })
+            
+        expect(response.statusCode).toEqual(409)
+    })
+
 })

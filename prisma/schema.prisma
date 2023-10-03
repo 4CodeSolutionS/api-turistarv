@@ -14,6 +14,7 @@ enum Role {
   ADMIN
   PARTNER
   GUEST
+  SUPER
 }
 
 enum Tourist {
@@ -29,29 +30,30 @@ enum Vehicle {
 }
 
 model User {
-  id          String   @id @unique @default(uuid())
-  name        String
-  email       String   @unique
-  password    String
-  phone       String
-  passport    String?  @unique
-  gender      String
-  dateBirth   DateTime
-  cpf         String?  @unique
-  rvLength    Decimal
-  tugPlate    String
-  rvPlate     String
-  touristType Tourist
-  vehicleType Vehicle
-  emailActive Boolean  @default(false)
-  role        Role     @default(GUEST)
-  createdAt   DateTime @default(now())
+  id              String   @id @unique @default(uuid())
+  idCustomerAsaas String?
+  name            String
+  email           String   @unique
+  password        String
+  phone           String
+  passport        String?  @unique
+  gender          String
+  dateBirth       DateTime
+  cpf             String?  @unique
+  rvLength        Decimal
+  tugPlate        String
+  rvPlate         String
+  touristType     Tourist
+  vehicleType     Vehicle
+  emailActive     Boolean  @default(false)
+  role            Role     @default(GUEST)
+  createdAt       DateTime @default(now())
 
-  Lead         Lead[]
-  Post         Post[]
-  Acommodation Acommodation[]
-  Address      Address[]
-  Token        Token[]
+  leads         Lead[]
+  posts         Post[]
+  acommodations Acommodation[]
+  address       Address[]
+  tokens        Token[]
 
   @@map("users")
 }
@@ -119,7 +121,7 @@ model Acommodation {
   user   User   @relation(fields: [idUser], references: [id], onDelete: Cascade, onUpdate: Cascade)
   idUser String
 
-  Box Box[]
+  boxes Box[]
 
   @@map("acommodations")
 }
