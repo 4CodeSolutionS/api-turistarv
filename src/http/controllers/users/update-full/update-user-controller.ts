@@ -10,36 +10,46 @@ export async function UpdateUser (request: FastifyRequest, reply:FastifyReply){
             const userSchemaBody = z.object({
               id: z.string().uuid().nonempty(),
               name: z.string().min(4).nonempty(), 
-              email: z.string().email().nonempty(), 
               phone: z.string().nonempty(), 
-              cpf: 
-                z.string()
-                .refine((cpf) =>{
-                  const cpfRegex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/
-                  return cpfRegex.test(cpf)
-                 
-                }),
               gender: z.enum(['MASCULINO', 'FEMININO']), 
+              dateBirth: z.string().nonempty().refine((date) => {
+                const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/
+                return dateRegex.test(date)
+            }),
+              rvLength: z.number().nonnegative(),
+              rvPlate: z.string().nonempty(),
+              touristType: z.enum(['CARAVANISTA', 'ADMIRADOR']),
+              tugPlate: z.string().nonempty(),
+              vehicleType: z.enum(['MOTORHOME', 'TRAILER', 'CAMPER', 'TENT']),
             })
 
             const { 
                 id,
-                email, 
                 gender,
                 name,
                 phone,
-                cpf,
+                dateBirth,
+                rvLength,
+                rvPlate,
+                touristType,
+                tugPlate,
+                vehicleType
+
             } = userSchemaBody.parse(request.body)
 
             const updateUserUseCase = await makeUpdateUser()
             
             const {user} = await updateUserUseCase.execute({
                 id,
-                email, 
                 gender,
                 name,
                 phone,
-                cpf,
+                dateBirth: new Date(dateBirth),
+                rvLength,
+                rvPlate,
+                touristType,
+                tugPlate,
+                vehicleType
             })
             
             

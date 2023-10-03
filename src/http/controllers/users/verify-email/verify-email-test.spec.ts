@@ -3,7 +3,6 @@ import request from 'supertest'
 import { fastifyApp } from "@/app";
 import { Token, User } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { createAndAuthenticateUser } from "@/utils/test/create-and-authenticate-user";
 
 describe('Verify e-mail User (e2e)', ()=>{
     beforeAll(async()=>{
@@ -18,7 +17,29 @@ describe('Verify e-mail User (e2e)', ()=>{
     })
 
     test('should be able to verify e-mail a user', async()=>{
-        const {user} = await createAndAuthenticateUser(fastifyApp)
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "524.658.490-93",
+            dateBirth: '2023-10-03',
+            email: 'email1@test.com',
+            gender: 'MASCULINO',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
+
+        const responseLoginUser = await request(fastifyApp.server)
+        .post('/api/users/login')
+        .send({
+            email: 'email1@test.com',
+            password: '123456',
+        })
+
+        const {accessToken, user} = responseLoginUser.body
 
         const {token} = await prisma.token.findFirstOrThrow({
             where:{
@@ -45,33 +66,55 @@ describe('Verify e-mail User (e2e)', ()=>{
     })
 
     test('should not be able to verify e-mail user with wrong email', async()=>{
-        const {accessToken, user} = await createAndAuthenticateUser(
-            fastifyApp,
-            "PACIENT",
-            "d86db2b4-88da-4778-82ce-6e42c2ae6530",
-            'user2@email.com',
-            '124.546.159-40',
-            )
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "524.658.490-45",
+            dateBirth: '2023-10-03',
+            email: 'email2@test.com',
+            gender: 'MASCULINO',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
 
+        const responseLoginUser = await request(fastifyApp.server)
+        .post('/api/users/login')
+        .send({
+            email: 'email2@test.com',
+            password: '123456',
+        })
+
+        const {accessToken, user} = responseLoginUser.body
+
+        const email = 'fake@email.com'
         const response = await request(fastifyApp.server)
-        .post(`/api/users/verify-email?email=${user.email}&token=${accessToken}`)
+        .post(`/api/users/verify-email?email=${email}&token=${accessToken}`)
         .send()
         expect(response.statusCode).toEqual(404)
     })
 
-
     test('should not be able to verify e-mail user with token expired', async()=>{
         vi.setSystemTime( new Date(2023, 10, 24, 7, 0, 0))
-        const responseCreateUser = await request(fastifyApp.server).post('/api/users').send({
-            name: 'Kaio Moreira',
-            email: 'user1-dev@outlook.com',
-            password: '123456',
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "524.658.478-93",
+            dateBirth: '2023-10-03',
+            email: 'email3@test.com',
             gender: 'MASCULINO',
-            phone: '11999999999',
-            cpf: '123.789.565-65',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
         })
 
-        const {id, email} = responseCreateUser.body as User
+        const {id, email} = responseRegisterUser.body
 
         const {token} = await prisma.token.findFirstOrThrow({
             where:{

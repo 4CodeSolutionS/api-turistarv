@@ -11,61 +11,141 @@ describe('Register User (e2e)', ()=>{
         await fastifyApp.close()
     })
 
-    test('should be able to register a user', async()=>{
-        const response = await request(fastifyApp.server).post('/api/users').send({
-            name: 'Kaio Moreira',
-            email: 'user1-dev@outlook.com',
-            password: '123456',
+    test('should be able to register a user with cpf', async()=>{
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "524.658.490-93",
+            dateBirth: '2023-10-03',
+            email: 'email1@test.com',
             gender: 'MASCULINO',
-            phone: '11999999999',
-            cpf: '123.789.565-65',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
         })
-            
-        expect(response.statusCode).toEqual(201)
+         expect(responseRegisterUser.statusCode).toEqual(201)
+    })
+
+    test('should be able to register a user with passport', async()=>{
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            passport: "ACS569A",
+            dateBirth: '2023-10-03',
+            email: 'email2@test.com',
+            gender: 'MASCULINO',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
+         expect(responseRegisterUser.statusCode).toEqual(201)
     })
 
     test('should not be able to register a user with email already exists', async()=>{
         await request(fastifyApp.server).post('/api/users').send({
-            name: 'Kaio Moreira',
-            email: 'user1-dev@outlook.com',
-            password: '123456',
+            cpf: "524.658.490-93",
+            dateBirth: '2023-10-03',
+            email: 'email1@test.com',
             gender: 'MASCULINO',
-            phone: '11999999999',
-            cpf: '123.789.565-65'
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
         })
 
-        const response = await request(fastifyApp.server).post('/api/users').send({
-            name: 'Kaio Moreira',
-            email: 'user1-dev@outlook.com',
-            password: '123456',
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "524.658.490-93",
+            dateBirth: '2023-10-03',
+            email: 'email1@test.com',
             gender: 'MASCULINO',
-            phone: '11999999999',
-            cpf: '123.789.565-65',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
         })
-            
-        expect(response.statusCode).toEqual(409)
+        expect(responseRegisterUser.statusCode).toEqual(409)
     })
 
     test('should not be able to register a user with cpf already exists', async()=>{
         await request(fastifyApp.server).post('/api/users').send({
-            name: 'Kaio Moreira',
-            email: 'user2-dev@outlook.com',
-            password: '123456',
+            cpf: "524.658.490-93",
+            dateBirth: '2023-10-03',
+            email: 'email3@test.com',
             gender: 'MASCULINO',
-            phone: '11999999999',
-            cpf: '123.789.565-65',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
         })
 
-        const response = await request(fastifyApp.server).post('/api/users').send({
-            name: 'Kaio Moreira',
-            email: 'user1-dev@outlook.com',
-            password: '123456',
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "524.658.490-93",
+            dateBirth: '2023-10-03',
+            email: 'email4@test.com',
             gender: 'MASCULINO',
-            phone: '11999999999',
-            cpf: '123.789.565-65',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
         })
             
-        expect(response.statusCode).toEqual(409)
+        expect(responseRegisterUser.statusCode).toEqual(409)
+    })
+
+    test('should not be able to register a user with passport already exists', async()=>{
+        await request(fastifyApp.server).post('/api/users').send({
+            passport: "ASD-QW2311",
+            dateBirth: '2023-10-03',
+            email: 'email3@test.com',
+            gender: 'MASCULINO',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
+
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            passport: "ASD-QW2311",
+            dateBirth: '2023-10-03',
+            email: 'email4@test.com',
+            gender: 'MASCULINO',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
+            
+        expect(responseRegisterUser.statusCode).toEqual(409)
     })
 
 })

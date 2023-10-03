@@ -12,39 +12,50 @@ describe('Login User (e2e)', ()=>{
     })
 
     test('should be able to login a user', async()=>{
-        await request(fastifyApp.server).post('/api/users').send({
-            name: 'Kaio Moreira',
-            email: 'user1-dev@outlook.com',
-            password: '123456',
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "524.658.490-93",
+            dateBirth: '2023-10-03',
+            email: 'email1@test.com',
             gender: 'MASCULINO',
-            phone: '11999999999',
-            cpf: '123.222.565-65',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
         })
 
-        const response = await request(fastifyApp.server)
+        const responseLoginUser = await request(fastifyApp.server)
         .post('/api/users/login')
         .send({
-            email: 'user1-dev@outlook.com',
+            email: 'email1@test.com',
             password: '123456',
         })
-
-        expect(response.statusCode).toEqual(200)
+        expect(responseLoginUser.statusCode).toEqual(200)
     })
 
     test('should be able to login a user with email wrong', async()=>{
-        await request(fastifyApp.server).post('/api/users').send({
-            name: 'Kaio Moreira',
-            email: 'user1-dev@outlook.com',
-            password: '123456',
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "524.658.490-91",
+            dateBirth: '2023-10-03',
+            email: 'email2@test.com',
             gender: 'MASCULINO',
-            phone: '11999999999',
-            cpf: '123.222.565-65',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
         })
 
         const response = await request(fastifyApp.server)
         .post('/api/users/login')
         .send({
-            email: 'user2-dev@outlook.com',
+            email: 'email22@test.com',
             password: '123456',
         })
 
@@ -52,13 +63,19 @@ describe('Login User (e2e)', ()=>{
     })
 
     test('should be able to login a user with password wrong', async()=>{
-        await request(fastifyApp.server).post('/api/users').send({
-            name: 'Kaio Moreira',
-            email: 'user1-dev@outlook.com',
-            password: '123456',
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "524.658.490-95",
+            dateBirth: '2023-10-03',
+            email: 'email3@test.com',
             gender: 'MASCULINO',
-            phone: '11999999999',
-            cpf: '123.222.565-65',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
         })
 
         const response = await request(fastifyApp.server)

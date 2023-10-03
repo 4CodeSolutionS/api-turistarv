@@ -286,7 +286,7 @@ export class PrismaUsersRepository implements IUsersRepository{
         return user
     }
 
-    async activeEmail(id: string): Promise<void | null> {
+    async activeEmail(id: string){
         await prisma.user.update({
             where: {
                 id
@@ -308,7 +308,7 @@ export class PrismaUsersRepository implements IUsersRepository{
         return user
     }
 
-    async delete(id: string): Promise<void> {
+    async delete(id: string){
         await prisma.user.delete({
             where: {
                 id

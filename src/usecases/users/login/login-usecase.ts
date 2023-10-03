@@ -65,10 +65,12 @@ export class LoginUseCase{
             token: refreshToken,
         })
 
+        const getSafeUser = await this.usersRepository.getUserSecurity(findUserExists.id) as User
+
         return {
+            user: getSafeUser,
             accessToken,
             refreshToken,
-            user: findUserExists
         }
     }
 }

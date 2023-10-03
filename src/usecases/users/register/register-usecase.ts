@@ -92,8 +92,10 @@ export class RegisterUseCase{
             vehicleType
         })
 
-        // pegar template de verificaçao de email
-        const pathTemplate = './src/views/emails/verify-email.hbs'
+         // pegar template de verificaçao de email
+         let pathTemplate = env.NODE_ENV === "development" ? 
+         './views/emails/verify-email.hbs':
+         './build/views/emails/verify-email.hbs' 
         
         // gerar token valido por 3h
         const token = randomUUID()
@@ -108,7 +110,9 @@ export class RegisterUseCase{
             token
         })
         // formatar link com token
-        const link = `${env.APP_URL_LOCAL}/users/verify-email?token=${token}`
+        let link = env.NODE_ENV === "development" ?
+        `${env.APP_URL_DEVLOPMENT}/users/verify-email?token=${token}`:
+        `${env.APP_URL_PRODUCTION}/users/verify-email?token=${token}`
 
         // enviar verificação de email
         await this.sendMailProvider.sendEmail(

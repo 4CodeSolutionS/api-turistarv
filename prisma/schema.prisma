@@ -64,7 +64,7 @@ model Token {
   expireDate DateTime
   createdAt  DateTime @default(now())
 
-  user   User   @relation(fields: [idUser], references: [id])
+  user   User   @relation(fields: [idUser], references: [id], onDelete: Cascade, onUpdate: NoAction)
   idUser String
 
   @@map("tokens")
@@ -92,7 +92,7 @@ model Post {
   createdAt DateTime @default(now())
   active    Boolean  @default(true)
 
-  user   User?   @relation(fields: [idUser], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  user   User?   @relation(fields: [idUser], references: [id])
   idUser String?
 
   @@map("posts")
@@ -104,21 +104,21 @@ model Box {
   createdAt DateTime @default(now())
   active    Boolean  @default(true)
 
-  acommodation   Acommodation? @relation(fields: [idAcommodation], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  acommodation   Acommodation? @relation(fields: [idAcommodation], references: [id])
   idAcommodation String?
 
   @@map("boxes")
 }
 
 model Acommodation {
-  id            String   @id @unique @default(uuid())
+  id            String  @id @unique @default(uuid())
   name          String
-  images        String[]
-  convenience   String[]
-  propertyRules String[]
-  active        Boolean  @default(true)
+  images        String
+  convenience   String
+  propertyRules String
+  active        Boolean @default(true)
 
-  user   User   @relation(fields: [idUser], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user   User   @relation(fields: [idUser], references: [id])
   idUser String
 
   boxes Box[]
@@ -138,9 +138,9 @@ model Address {
   complement String
   reference  String
 
-  user           User          @relation(fields: [idUser], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user           User          @relation(fields: [idUser], references: [id])
   idUser         String
-  Announcement   Announcement? @relation(fields: [idAnnouncement], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Announcement   Announcement? @relation(fields: [idAnnouncement], references: [id])
   idAnnouncement String?
 
   @@map("addresses")
@@ -161,7 +161,7 @@ model Announcement {
   expirationDate  DateTime
   category        String
   price           Decimal
-  contactInfo     String[]
+  contactInfo     String
   status          Status   @default(ACTIVE)
   emphasis        Boolean  @default(false)
   views           Int      @default(0)

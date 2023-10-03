@@ -1,0 +1,11 @@
+-- AlterTable
+ALTER TABLE "acommodations" ALTER COLUMN "images" SET NOT NULL,
+ALTER COLUMN "images" SET DATA TYPE TEXT,
+ALTER COLUMN "convenience" SET NOT NULL,
+ALTER COLUMN "convenience" SET DATA TYPE TEXT,
+ALTER COLUMN "propertyRules" SET NOT NULL,
+ALTER COLUMN "propertyRules" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "announcements" ALTER COLUMN "contactInfo" SET NOT NULL,
+ALTER COLUMN "contactInfo" SET DATA TYPE TEXT;

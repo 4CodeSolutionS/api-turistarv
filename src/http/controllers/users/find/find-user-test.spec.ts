@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import request from 'supertest'
 import { fastifyApp } from "@/app";
-import { createAndAuthenticateUser } from "@/utils/test/create-and-authenticate-user";
+import { randomUUID } from "crypto";
 
 describe('Find User (e2e)', ()=>{
     beforeAll(async()=>{
@@ -13,31 +13,71 @@ describe('Find User (e2e)', ()=>{
     })
 
     test('should be able to find a user', async()=>{
-        const {accessToken, user} = await createAndAuthenticateUser(fastifyApp)
-        
-        const response = await request(fastifyApp.server)
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "524.658.490-93",
+            dateBirth: '2023-10-03',
+            email: 'email1@test.com',
+            gender: 'MASCULINO',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
+
+        const responseLoginUser = await request(fastifyApp.server)
+        .post('/api/users/login')
+        .send({
+            email: 'email1@test.com',
+            password: '123456',
+        })
+
+        const {accessToken, user} = responseLoginUser.body
+
+        const responseFindUser = await request(fastifyApp.server)
         .get(`/api/users/${user.id}`)
         .set('Authorization', `Bearer ${accessToken}`)
         .send()
-            
-        expect(response.statusCode).toEqual(200)
+
+        expect(responseFindUser.statusCode).toEqual(200)
     })
 
     test('should not be able to find a user with invalid id', async()=>{
-        const {accessToken} = await createAndAuthenticateUser(
-            fastifyApp, 
-            'PACIENT', 
-            'bda51c4d-5071-4abb-b94b-d45c6813304d',
-            'user2@test.com', 
-            '134.684.456-01')
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "524.658.490-97",
+            dateBirth: '2023-10-03',
+            email: 'email2@test.com',
+            gender: 'MASCULINO',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
 
-        const fakeId = '528404fd-9b4d-43cd-a190-f9dd28f86540'
+        const responseLoginUser = await request(fastifyApp.server)
+        .post('/api/users/login')
+        .send({
+            email: 'email2@test.com',
+            password: '123456',
+        })
 
-        const response = await request(fastifyApp.server)
+        const {accessToken, user} = responseLoginUser.body
+
+        const fakeId = randomUUID()
+
+        const responseFindUser = await request(fastifyApp.server)
         .get(`/api/users/${fakeId}`)
         .set('Authorization', `Bearer ${accessToken}`)
         .send()
+
         
-        expect(response.statusCode).toEqual(404)
+        expect(responseFindUser.statusCode).toEqual(404)
     })
 })

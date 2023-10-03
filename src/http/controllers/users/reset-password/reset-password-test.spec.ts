@@ -3,7 +3,6 @@ import request from 'supertest'
 import { fastifyApp } from "@/app";
 import { Token } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { createAndAuthenticateUser } from "@/utils/test/create-and-authenticate-user";
 import { hash } from "bcrypt";
 
 describe('Reset passowrd (e2e)', ()=>{
@@ -18,7 +17,22 @@ describe('Reset passowrd (e2e)', ()=>{
     })
 
     test('should be able to reset password a user', async()=>{
-        const {user} = await createAndAuthenticateUser(fastifyApp)
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "524.658.490-93",
+            dateBirth: '2023-10-03',
+            email: 'email1@test.com',
+            gender: 'MASCULINO',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
+
+        const user = responseRegisterUser.body
 
         const {token} = await prisma.token.findFirstOrThrow({
             where:{
@@ -46,7 +60,7 @@ describe('Reset passowrd (e2e)', ()=>{
         expect(response.statusCode).toEqual(404)
     })
 
-    test('should not be able to reset passowrd user with token expired', async()=>{
+    test('should not be able to reset passoword user with token expired', async()=>{
         await prisma.user.create({
             data:{
                 id: '9ff0986d-fd7d-4bc4-ac68-9a3e3fc1451f',
@@ -57,7 +71,12 @@ describe('Reset passowrd (e2e)', ()=>{
                 phone: '77-77777-7777',
                 password: await hash('123456', 8),
                 emailActive: false,
-                role: 'PACIENT',
+                dateBirth: new Date(2023, 10, 24),
+                rvLength: 10,
+                rvPlate: 'ABC-1234',
+                touristType: 'ADMIRADOR',
+                tugPlate: 'ABC-1234',
+                vehicleType: 'CAMPER',
             }
         })
 
@@ -75,6 +94,7 @@ describe('Reset passowrd (e2e)', ()=>{
         }) as unknown as Token
 
         vi.setSystemTime( new Date(2023, 10, 24, 10, 0, 1))
+        
         const response = await request(fastifyApp.server)
         .patch(`/api/users/reset-password?token=${token}`)
         .send({

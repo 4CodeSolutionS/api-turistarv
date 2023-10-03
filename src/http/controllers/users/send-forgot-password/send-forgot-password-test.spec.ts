@@ -1,7 +1,6 @@
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import request from 'supertest'
 import { fastifyApp } from "@/app";
-import { createAndAuthenticateUser } from "@/utils/test/create-and-authenticate-user";
 
 describe('Send email forgot password (e2e)', ()=>{
     beforeAll(async()=>{
@@ -13,7 +12,22 @@ describe('Send email forgot password (e2e)', ()=>{
     })
 
     test('should be able to send email with link for reset password', async()=>{
-        const {user} = await createAndAuthenticateUser(fastifyApp)
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "524.658.490-93",
+            dateBirth: '2023-10-03',
+            email: 'email1@test.com',
+            gender: 'MASCULINO',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
+
+        const user = responseRegisterUser.body
 
         const response = await request(fastifyApp.server)
         .post(`/api/users/forgot-password`)
