@@ -38,7 +38,7 @@ export class SendForgotPasswordUseCase{
 
         // criar token com uuid
         const token = randomUUID()
-
+        console.log(token)
          // criar data de expiração
         const expireDate = this.dayjsDateProvider.addHours(3)
 
