@@ -42,7 +42,7 @@ export class UpdateUserUseCase{
             throw new ResourceNotFoundError()
         }
 
-       await this.usersRepository.update({
+       const userUpdated = await this.usersRepository.update({
             id,
             gender,
             name,
@@ -54,10 +54,9 @@ export class UpdateUserUseCase{
             tugPlate,
             vehicleType
         })
-
         
         return {
-            user: findUserExists
+            user: userUpdated
         }
     }
 }

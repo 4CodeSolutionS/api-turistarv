@@ -16,23 +16,29 @@ describe("Delete user (unit)", () => {
         )
 
          await usersRepositoryInMemory.create({
-            id:'id-user-1',
-            cpf: "12345678910",
-            email: 'user-test@email.com',
+            id: "bd3234d7-21e6-4e1d-8129-8b823c4d331a",
+            cpf: "524.658.490-93",
+            dateBirth: '2023-10-03',
+            email: 'email1@test.com',
             gender: 'MASCULINO',
-            name: 'John Doe',
+            name: 'Kaio Moreira',
             phone: '77-77777-7777',
             password: await hash('123456', 8),
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
         }); 
 
     });
 
     test("Should be able to delete user", async () => {
         await stu.execute({
-            id: 'id-user-1'
+            id: 'bd3234d7-21e6-4e1d-8129-8b823c4d331a'
         });
         
-        const findUserExist = await usersRepositoryInMemory.getUserSecurity('id-user-1') as User
+        const findUserExist = await usersRepositoryInMemory.getUserSecurity('bd3234d7-21e6-4e1d-8129-8b823c4d331a') as User
 
         expect(findUserExist).toEqual(null)
     });
