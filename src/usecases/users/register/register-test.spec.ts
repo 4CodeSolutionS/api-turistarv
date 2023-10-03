@@ -5,8 +5,8 @@ import { RegisterUseCase } from "./register-usecase";
 import { CPFAlreadyExistsError } from "@/usecases/errors/cpf-already-exists-error";
 import { DayjsDateProvider } from "@/providers/DateProvider/implementations/provider-dayjs";
 import { InMemoryTokensRepository } from "@/repositories/in-memory/in-memory-tokens-repository";
-import { InMemoryMailProvider } from "@/providers/MailProvider/in-memory/in-memory-mail-provider";
-import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exists-error";
+import { InMemoryMailProvider, Message } from "@/providers/MailProvider/in-memory/in-memory-mail-provider";
+import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exist-error";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
 let usersTokensRepositoryInMemory: InMemoryTokensRepository;
@@ -28,7 +28,7 @@ describe("Register user (unit)", () => {
         )
     });
 
-    test("Should be able to register a new account", async () => {
+    test("Should be able to register a new account with cpf", async () => {
         const { user } = await stu.execute({ 
             cpf: "12345678910",
             dateBirth: new Date('1999-06-01'),
@@ -45,8 +45,33 @@ describe("Register user (unit)", () => {
         });
 
         // confirmar se email foi enviado
-        const message = await sendMailProvider.findMessageSent(user.email)
+        const message = await sendMailProvider.findMessageSent(user.email) as Message
+        expect(user.id).toEqual(expect.any(String))
+        expect(message).toEqual(
+            expect.objectContaining({
+                subject: 'Confirmação de email',
+            })
+        )
+    });
+    
+    test("Should be able to register a new account with cpf", async () => {
+        const { user } = await stu.execute({ 
+            passport: "12345678910",
+            dateBirth: new Date('1999-06-01'),
+            email: 'email@test.com',
+            gender: 'M',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        });
 
+        // confirmar se email foi enviado
+        const message = await sendMailProvider.findMessageSent(user.email)
         expect(user.id).toEqual(expect.any(String))
         expect(message).toEqual(
             expect.objectContaining({

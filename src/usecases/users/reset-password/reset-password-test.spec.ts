@@ -70,6 +70,7 @@ describe("Reset password (unit)", () => {
             tugPlate: 'ABC-1234',
             vehicleType: 'CAMPER',
         })
+        const oldPassword = user.password
         const userToken = await usersTokensRepositoryInMemory.findByUserId(user.id) as Token
 
         await stu.execute({ 
@@ -77,9 +78,9 @@ describe("Reset password (unit)", () => {
             password: '101010'
         });
 
-        const updateUserPassword = await usersRepositoryInMemory.findByEmail(user.email) as User
+         const updateUserPassword = await usersRepositoryInMemory.findByEmail(user.email) as User
 
-        expect(updateUserPassword.password !== user.password).toBeTruthy()
+         expect(updateUserPassword.password !== oldPassword).toBeTruthy()
     });
 
 });

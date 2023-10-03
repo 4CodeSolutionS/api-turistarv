@@ -1,6 +1,5 @@
 import { IUsersRepository } from "@/repositories/interface-users-repository";
 import { AccessTimeOutError } from "@/usecases/errors/access-time-out-error";
-import { EmailAlreadyExistsError } from "@/usecases/errors/email-already-exists-error";
 import 'dotenv/config'
 import { ITokensRepository } from "@/repositories/interface-tokens-repository";
 import { IDateProvider } from "@/providers/DateProvider/interface-date-provider";
@@ -45,19 +44,15 @@ export class ResetPasswordUseCase{
                 throw new AccessTimeOutError()
             }
 
-
         // buscar usuário no banco
         const user = await this.usersRepository.findById(findToken.idUser) as User
-
+        
         // criptografar senha
         const newPassword = await hash(password, 8)
 
-        // cira nova senha do usuario
-        user.password = newPassword
+        // chamar metodo de atualizar senha
+        await this.usersRepository.changePassword(user.id, newPassword)
         
-        // salvar usuario atualizado no banco
-        await this.usersRepository.create(user)
-
         // deletar token do banco
         await this.usersTokensRepository.delete(findToken.id)
     }

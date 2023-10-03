@@ -2,7 +2,6 @@ import { env } from "@/env";
 import { IUsersRepository } from "@/repositories/interface-users-repository";
 import { CPFAlreadyExistsError } from "@/usecases/errors/cpf-already-exists-error";
 import { EmailAlreadyExistsError } from "@/usecases/errors/email-already-exists-error";
-import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exists-error";
 import { Tourist, User, Vehicle } from "@prisma/client";
 import { hash } from 'bcrypt'
 import 'dotenv/config'
@@ -10,6 +9,7 @@ import { randomUUID } from "crypto";
 import { IDateProvider } from "@/providers/DateProvider/interface-date-provider";
 import { ITokensRepository } from "@/repositories/interface-tokens-repository";
 import { IMailProvider } from "@/providers/MailProvider/interface-mail-provider";
+import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exist-error";
 
 interface IRequestRegisterAccount {
     cpf?: string
@@ -111,13 +111,13 @@ export class RegisterUseCase{
         const link = `${env.APP_URL_LOCAL}/users/verify-email?token=${token}`
 
         // enviar verificação de email
-        // await this.sendMailProvider.sendEmail(
-        //     email, 
-        //     name,
-        //     "Confirmação de email", 
-        //     link, 
-        //     pathTemplate
-        // )
+        await this.sendMailProvider.sendEmail(
+            email, 
+            name,
+            "Confirmação de email", 
+            link, 
+            pathTemplate
+        )
 
         return {
             user

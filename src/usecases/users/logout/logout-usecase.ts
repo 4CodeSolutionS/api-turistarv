@@ -27,13 +27,6 @@ export class LogoutUseCase{
         // deletar refresh token do banco de dados
         await this.usersTokensRepository.delete(userToken.id)
 
-        // criar novo access token para substiuir o antigo
-        // e nao retornar nada para que o usuario perca o acesso
-        // total da aplicação
-        const blockingToken = sign({}, env.JWT_SECRET_ACCESS_TOKEN, {
-            subject: userToken.idUser,
-            expiresIn: env.JWT_EXPIRES_IN_ACCESS_TOKEN
-        })
-    
+        
     }
 }

@@ -20,6 +20,7 @@
     "test:unit:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "test:ui": "vitest --ui",
+    "test:only": "vitest related --watch",
     "send:email": "tsx ./src/scripts/send-email-fake.ts"
   },
   "keywords": [],

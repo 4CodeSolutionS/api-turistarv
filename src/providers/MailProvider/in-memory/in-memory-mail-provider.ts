@@ -15,9 +15,9 @@ export class InMemoryMailProvider implements IMailProvider{
         this.messages = this.messages
     }
     async findMessageSent(email: string): Promise<Message> {
-        const message = this.messages.find(message => message.email === email) as Message
+        const message = this.messages.find(message => message.email === email)
 
-        return message
+        return message as Message
     }
 
     async sendEmail(

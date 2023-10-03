@@ -5,6 +5,7 @@ export interface IUsersRepository {
     list(): Promise<User[]>
     findById(id:string): Promise<User | null>
     findByIdCostumerPayment(id:string): Promise<User | null>
+    findByPassport(passport:string): Promise<User | null>
     getUserSecurity(id:string): Promise<User | null>
     findByEmail(email:string): Promise<User | null>
     findByCPF(cpf:string): Promise<User | null>
