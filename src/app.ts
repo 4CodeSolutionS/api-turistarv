@@ -5,6 +5,7 @@ import "dotenv/config"
 import { usersRoutes } from "./http/controllers/users/routes";
 import { ZodError } from "zod";
 import { env } from "./env";
+import { InvalidAccessTokenError } from "./usecases/errors/invalid-access-token-error";
 
 export const fastifyApp = fastify()
 
@@ -21,6 +22,9 @@ fastifyApp.register(usersRoutes,{
 fastifyApp.setErrorHandler((error:FastifyError, _request:FastifyRequest, reply: FastifyReply)=>{
   if(error instanceof ZodError){
       return reply.status(400).send({message: 'Validation error', issues: error.format()})
+  }
+  if(error instanceof InvalidAccessTokenError){
+    return reply.status(401).send({ message: error.message})
   }
 
   if(env.NODE_ENV !== 'production'){

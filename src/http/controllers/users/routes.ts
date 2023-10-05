@@ -8,6 +8,7 @@ import { ResetPassword } from './reset-password/reset-password-controller'
 import { FindUser } from './find/find-user-controller'
 import { DeleteUser } from './delete/delete-user-controller'
 import { UpdateUser } from './update-full/update-user-controller'
+import { LogoutUser } from './logout/logout-user-controller'
 export async function usersRoutes(fastifyApp: FastifyInstance) {
     // register user
     fastifyApp.post('/', RegisterUser)
@@ -16,7 +17,7 @@ export async function usersRoutes(fastifyApp: FastifyInstance) {
     fastifyApp.post('/login', LoginUser)
 
     // logout user
-    // fastifyApp.post('/logout', {onRequest: [verifyTokenJWT]}, LogoutUser)
+    fastifyApp.post('/logout', {onRequest: [verifyTokenJWT]}, LogoutUser)
 
     // verify e-mail user
     fastifyApp.patch('/verify-email', VerifyEmail)

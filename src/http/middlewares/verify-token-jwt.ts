@@ -1,4 +1,6 @@
 import { env } from "@/env";
+import { RedisInMemoryProvider } from "@/providers/CacheProvider/implementations/provider-redis-in-memory";
+import { InvalidAccessTokenError } from "@/usecases/errors/invalid-access-token-error";
 import { Role } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { verify } from "jsonwebtoken";
@@ -26,13 +28,22 @@ export async function verifyTokenJWT(
     try {
         const { sub: idUser, role } = verify(token, env.JWT_SECRET_ACCESS_TOKEN) as IPayload;
 
+        //[] verificar se o token existe na blacklist
+        const storageInMemoryProvider = new RedisInMemoryProvider()
+
+        const inBlackList = await storageInMemoryProvider.isTokenInBlackList(token)
+
+        if(inBlackList){
+            throw new InvalidAccessTokenError()
+        }
         // depois pesquisar em um método findbyid que vamos criar
         // adicionar idUser no request
         request.user = {
             id: idUser,
-            role: role as Role,
+            role: role,
+            token,
         };
     } catch {
-        throw new Error("Invalid token");
+        throw new InvalidAccessTokenError();
     }
 }
