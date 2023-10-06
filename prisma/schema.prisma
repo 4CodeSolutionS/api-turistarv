@@ -30,24 +30,24 @@ enum Vehicle {
 }
 
 model User {
-  id              String   @id @unique @default(uuid())
+  id              String    @id @unique @default(uuid())
   idCustomerAsaas String?
   name            String
-  email           String   @unique
+  email           String    @unique
   password        String
-  phone           String
-  passport        String?  @unique
-  gender          String
-  dateBirth       DateTime
-  cpf             String?  @unique
-  rvLength        Decimal
-  tugPlate        String
-  rvPlate         String
-  touristType     Tourist
-  vehicleType     Vehicle
-  emailActive     Boolean  @default(false)
-  role            Role     @default(GUEST)
-  createdAt       DateTime @default(now())
+  phone           String?
+  passport        String?   @unique
+  gender          String?
+  dateBirth       DateTime?
+  cpf             String?   @unique
+  rvLength        Decimal?
+  tugPlate        String?
+  rvPlate         String?
+  touristType     Tourist?
+  vehicleType     Vehicle?  @default(CAMPER)
+  emailActive     Boolean   @default(false)
+  role            Role      @default(GUEST)
+  createdAt       DateTime  @default(now())
 
   leads         Lead[]
   posts         Post[]

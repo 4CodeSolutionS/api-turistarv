@@ -27,6 +27,11 @@ export class VerifyEmailUseCase{
             throw new ResourceNotFoundError()
         }
 
+        //[x] verificar se o email ja foi ativado
+        if(findUserByEmail.emailActive){
+            throw new AccessTimeOutError()
+        }
+
         const findToken = await this.usersTokensRepository.findByToken(token)
 
         if(!findToken){

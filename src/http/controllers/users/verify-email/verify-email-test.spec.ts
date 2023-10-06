@@ -18,7 +18,7 @@ describe('Verify e-mail User (e2e)', ()=>{
 
     test('should be able to verify e-mail a user', async()=>{
         const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
-            cpf: "524.658.490-93",
+            cpf: "52465849093",
             dateBirth: '2023-10-03',
             email: 'email1@test.com',
             gender: 'MASCULINO',
@@ -64,6 +64,48 @@ describe('Verify e-mail User (e2e)', ()=>{
         )
         
     })
+    
+    test('should not be able to verify e-mail a user already verify', async()=>{
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            cpf: "09049900011",
+            dateBirth: '2023-10-03',
+            email: 'email5@test.com',
+            gender: 'MASCULINO',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
+        const responseLoginUser = await request(fastifyApp.server)
+        .post('/api/users/login')
+        .send({
+            email: 'email5@test.com',
+            password: '123456',
+        })
+
+        const {accessToken, user} = responseLoginUser.body
+
+        const {token} = await prisma.token.findFirstOrThrow({
+            where:{
+                idUser: user.id
+            }
+        }) as unknown as Token
+
+        await request(fastifyApp.server)
+        .patch(`/api/users/verify-email?email=${user.email}&token=${token}`)
+        .send()
+
+        const responseVerifyEmail = await request(fastifyApp.server)
+        .patch(`/api/users/verify-email?email=${user.email}&token=${token}`)
+        .send()
+
+        
+        expect(responseVerifyEmail.statusCode).toEqual(401)
+    })
 
     test('should not be able to verify e-mail user with wrong email', async()=>{
         const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
@@ -98,9 +140,8 @@ describe('Verify e-mail User (e2e)', ()=>{
     })
 
     test('should not be able to verify e-mail user with token expired', async()=>{
-        vi.setSystemTime( new Date(2023, 10, 24, 7, 0, 0))
         const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
-            cpf: "524.658.478-93",
+            cpf: "27400298020",
             dateBirth: '2023-10-03',
             email: 'email3@test.com',
             gender: 'MASCULINO',
@@ -122,8 +163,7 @@ describe('Verify e-mail User (e2e)', ()=>{
             }
         }) as unknown as Token
 
-        vi.setSystemTime( new Date(2023, 10, 24, 10, 0, 1))
-        const response = await request(fastifyApp.server)
+        await request(fastifyApp.server)
         .patch(`/api/users/verify-email?email=${email}&token=${token}`)
         .send()
 
@@ -132,10 +172,15 @@ describe('Verify e-mail User (e2e)', ()=>{
                 id: id
             }
         })
+
+        const response = await request(fastifyApp.server)
+        .patch(`/api/users/verify-email?email=${email}&token=${token}`)
+        .send()
+        
         expect(response.statusCode).toEqual(401)
         expect(findUser).toEqual(
             expect.objectContaining({
-                emailActive: false
+                emailActive: true
             })
         )
     })

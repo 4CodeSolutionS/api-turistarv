@@ -12,19 +12,15 @@ import { IMailProvider } from "@/providers/MailProvider/interface-mail-provider"
 import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exist-error";
 
 interface IRequestRegisterAccount {
-    cpf?: string
-    dateBirth: Date,
     email: string,
-    gender: string,
     name: string,
-    passport?: string,
     password: string,
-    phone: string,
-    rvLength: number,
-    rvPlate: string,
-    touristType: Tourist,
-    tugPlate: string,
-    vehicleType: Vehicle,
+    gender?: string,
+    phone?: string,
+    rvLength?: number,
+    rvPlate?: string,
+    touristType?: Tourist,
+    vehicleType?: Vehicle,
 }
 interface IResponseRegisterAccount {
     user: User
@@ -39,18 +35,14 @@ export class RegisterUseCase{
     ) {}
 
     async execute({
-        cpf,
-        dateBirth,
         email,
         gender,
         name,
-        passport,
         password,
         phone,
         rvLength,
         rvPlate,
         touristType,
-        tugPlate,
         vehicleType
     }:IRequestRegisterAccount):Promise<IResponseRegisterAccount>{
         const findEmailAlreadyExists = await this.usersRepository.findByEmail(email)
@@ -59,37 +51,19 @@ export class RegisterUseCase{
             throw new EmailAlreadyExistsError()
         }
 
-        if(cpf){
-            const findCPFAlreadyExists = await this.usersRepository.findByCPF(cpf)
-
-            if(findCPFAlreadyExists){
-                throw new CPFAlreadyExistsError()
-            }
-        }
-        
-        if(passport){
-            const findPassportAlreadyExists = await this.usersRepository.findByPassport(passport)
-            if(findPassportAlreadyExists){
-                throw new PassportAlreadyExistsError()
-            }
-        }
 
         const criptingPassword = await hash(password, 8)
 
         const user = await this.usersRepository.create({
-            cpf,
-            dateBirth,
             email,
             gender,
             name,
-            passport,
             password: criptingPassword,
             phone,
             rvLength,
             rvPlate,
             touristType,
-            tugPlate,
-            vehicleType
+            vehicleType,
         })
 
          // pegar template de verificaçao de email

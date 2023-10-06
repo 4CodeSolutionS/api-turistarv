@@ -1,5 +1,4 @@
-* [ ] Color verificação no case do verify-email para impedir um email ja verificado
-* [ ] Adicionar lib cpf-cnpj-validator para validar o CPF 
-* [ ] Adcionar lib para validar passaport
-* [ ] Criar Blacklist de tokens usando o Redis com limpeza a cada 7 dias
-* [ ] Adcionar funcionalidade Logout
+* [x] Colocar verificação no case do verify-email para impedir um email ja verificado
+* [x] Adicionar lib cpf-cnpj-validator para validar o CPF 
+* [x] Criar Blacklist de tokens usando o Redis com limpeza a cada 7 dias
+* [x] Adcionar funcionalidade Logout

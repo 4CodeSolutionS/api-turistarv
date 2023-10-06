@@ -4,29 +4,21 @@ import { PassportAlreadyExistsError } from '@/usecases/errors/passport-already-e
 import { makeRegisterUser } from '@/usecases/factories/users/make-register-user-usecase'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
+import {cpf as CPF} from 'cpf-cnpj-validator'
+import { CPFInvalidError } from '@/usecases/errors/cpf-invalid-error'
 
 export async function RegisterUser (request: FastifyRequest, reply:FastifyReply){
         try {
             const userSchema = z.object({
-              cpf:z.string().refine((cpf) =>{
-                  const cpfRegex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/
-                  return cpfRegex.test(cpf)
-                }).optional(),
               name: z.string().min(4).nonempty(), 
               email: z.string().email().nonempty(), 
               password: z.string().min(6).nonempty(),
-              phone: z.string().nonempty(), 
-              gender: z.enum(['MASCULINO', 'FEMININO']), 
-              dateBirth: z.string().nonempty().refine((date) => {
-                  const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/
-                  return dateRegex.test(date)
-              }),
-              rvLength: z.number().nonnegative(),
-              rvPlate: z.string().nonempty(),
+              phone: z.string().nonempty().optional(), 
+              gender: z.enum(['MASCULINO', 'FEMININO', 'OUTRO']).optional(), 
+              rvLength: z.number().nonnegative().optional(),
+              rvPlate: z.string().nonempty().optional(),
               touristType: z.enum(['CARAVANISTA', 'ADMIRADOR']),
-              tugPlate: z.string().nonempty(),
-              vehicleType: z.enum(['MOTORHOME', 'TRAILER', 'CAMPER', 'TENT']),
-              passport: z.string().optional()
+              vehicleType: z.enum(['MOTORHOME', 'TRAILER', 'CAMPER', 'TENT']).optional(),
             })
 
             const { 
@@ -35,16 +27,12 @@ export async function RegisterUser (request: FastifyRequest, reply:FastifyReply)
                 gender,
                 name,
                 phone,
-                cpf,
-                dateBirth,
                 rvLength,
                 rvPlate,
                 touristType,
-                tugPlate,
                 vehicleType,
-                passport
             } = userSchema.parse(request.body)
-
+          
             const registerUseCase = await makeRegisterUser()
             
             const {user} = await registerUseCase.execute({
@@ -53,14 +41,10 @@ export async function RegisterUser (request: FastifyRequest, reply:FastifyReply)
                 gender,
                 name,
                 phone,
-                cpf,
-                dateBirth: new Date(dateBirth),
                 rvLength,
                 rvPlate,
-                touristType,
-                tugPlate,
                 vehicleType,
-                passport
+                touristType,
             })
             
             
@@ -75,7 +59,10 @@ export async function RegisterUser (request: FastifyRequest, reply:FastifyReply)
             }
             if(error instanceof  PassportAlreadyExistsError){
               return reply.status(409).send({ message: error.message})
-          }
+            }
+            if(error instanceof  CPFInvalidError){
+              return reply.status(401).send({ message: error.message})
+            }
             throw error
           }
 }

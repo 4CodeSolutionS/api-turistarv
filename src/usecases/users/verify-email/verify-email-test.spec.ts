@@ -67,6 +67,37 @@ describe("Verify email user (unit)", () => {
 
         expect(userActive?.emailActive).toBe(true)
     });
+    test("Should not be able to verify a user active ", async () => {
+        const {user} = await registerUseCase.execute({
+            cpf: "004.005.490-00",
+            dateBirth: new Date('1999-06-01'),
+            email: 'user2-test@email.com',
+            gender: 'M',
+            name: 'John Doe',
+            phone: '77-77777-7777',
+            password: await hash('123456', 8),
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
+        const userToken = await usersTokensRepositoryInMemory.findByUserId(user.id)
+
+        await stu.execute({ 
+            token: userToken?.token as string,
+            email: 'user2-test@email.com'
+        });
+
+        const userActive = await usersRepositoryInMemory.findByEmail('user2-test@email.com')
+
+        expect(()=> stu.execute({ 
+            token: userToken?.token as string,
+            email: 'user2-test@email.com'
+        })).rejects.toBeInstanceOf(AccessTimeOutError)
+
+        expect(userActive?.emailActive).toBe(true)
+    });
 
     test("Should not be able to verify a new account with Email already exists", async () => {
         const email = 'email@notexists.com'
