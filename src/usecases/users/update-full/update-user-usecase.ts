@@ -31,25 +31,26 @@ export class UpdateUserUseCase{
         passport
     }:IRequestUpdateUser):Promise<IResponseUpdateUser>{
         const findUserExists = await this.usersRepository.getUserSecurity(id)
-
         if(!findUserExists){
             throw new ResourceNotFoundError()
         }
 
-        const findUserByCPF = await this.usersRepository.findByCPF(cpf as string)
+        
+        if(cpf){
+            const findUserByCPF = await this.usersRepository.findByCPF(cpf)
+        //[x] verificar se cpf ja existe
+            if(findUserByCPF){
+                throw new CPFAlreadyExistsError()
+            }
 
-        //[] verificar se cpf ja existe
-        if(findUserByCPF){
-            throw new CPFAlreadyExistsError()
         }
-
-        const findUserByPassport = await this.usersRepository.findByPassport(passport as string)
-
-        //[] verificar se passport ja existe
-        if(findUserByPassport){
-            throw new PassportAlreadyExistsError()
+        if(passport){
+            const findUserByPassport = await this.usersRepository.findByPassport(passport)
+            //[x] verificar se passport ja existe
+            if(findUserByPassport){
+                throw new PassportAlreadyExistsError()
+            }
         }
-
        const userUpdated = await this.usersRepository.update({
             id,
             name,

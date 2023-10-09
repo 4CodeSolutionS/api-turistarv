@@ -6,6 +6,7 @@ import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-erro
 import { CPFAlreadyExistsError } from "@/usecases/errors/cpf-already-exists-error";
 import { EmailAlreadyExistsError } from "@/usecases/errors/email-already-exists-error";
 import { Prisma } from "@prisma/client";
+import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exist-error";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
 let stu: UpdateUserUseCase;
@@ -20,6 +21,7 @@ describe("Update user (unit)", () => {
         await usersRepositoryInMemory.create({
             id: "bd3234d7-21e6-4e1d-8129-8b823c4d331a",
             cpf: "524.658.490-93",
+            passport: '123456789',
             dateBirth: '2023-10-03',
             email: 'email1@test.com',
             name: 'Kaio Moreira',
@@ -28,12 +30,13 @@ describe("Update user (unit)", () => {
         })
     });
 
-    test("Should be able to update a user account", async () => {
+    test("Should be able to update a user account with cpf", async () => {
         const { user } = await stu.execute({ 
             id: "bd3234d7-21e6-4e1d-8129-8b823c4d331a",
             dateBirth: new Date('1995-10-03'),
             name: 'Sarah Moreira',
             phone: '77-7777-9999',
+            cpf: '45274090001'
         });
         expect(user).toEqual(
             expect.objectContaining({
@@ -41,6 +44,26 @@ describe("Update user (unit)", () => {
                 dateBirth: new Date('1995-10-03'),
                 phone: '77-7777-9999',
                 name: 'Sarah Moreira',
+                cpf: '45274090001'
+            }),
+        )
+    });
+
+    test("Should be able to update a user account with passport", async () => {
+        const { user } = await stu.execute({ 
+            id: "bd3234d7-21e6-4e1d-8129-8b823c4d331a",
+            dateBirth: new Date('1995-10-03'),
+            name: 'Sarah Moreira',
+            phone: '77-7777-9999',
+            passport: '987654321',
+        });
+        expect(user).toEqual(
+            expect.objectContaining({
+                id: "bd3234d7-21e6-4e1d-8129-8b823c4d331a",
+                dateBirth: new Date('1995-10-03'),
+                phone: '77-7777-9999',
+                name: 'Sarah Moreira',
+                passport: '987654321',
             }),
         )
     });
@@ -53,4 +76,25 @@ describe("Update user (unit)", () => {
             phone: '77-7777-9999',
         })).rejects.toBeInstanceOf(ResourceNotFoundError)
     });
+
+    test("Should not be able to update a user account with cpf already exists", async () => {
+        await expect(()=> stu.execute({ 
+            id: "bd3234d7-21e6-4e1d-8129-8b823c4d331a",
+            dateBirth: new Date('1995-10-03'),
+            name: 'Sarah Moreira',
+            phone: '77-7777-9999',
+            cpf: '524.658.490-93'
+        })).rejects.toBeInstanceOf(CPFAlreadyExistsError)
+    });
+
+    test("Should not be able to update a user account with passport already exists", async () => {
+        await expect(()=> stu.execute({ 
+            id: "bd3234d7-21e6-4e1d-8129-8b823c4d331a",
+            dateBirth: new Date('1995-10-03'),
+            name: 'Sarah Moreira',
+            phone: '77-7777-9999',
+            passport: '123456789'
+        })).rejects.toBeInstanceOf(PassportAlreadyExistsError)
+    });
+
 });

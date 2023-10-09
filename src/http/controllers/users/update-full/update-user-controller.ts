@@ -5,6 +5,7 @@ import { makeUpdateUser } from '@/usecases/factories/users/make-update-user-usec
 import { FastifyReply, FastifyRequest } from 'fastify'
 import {cpf as CPF} from 'cpf-cnpj-validator'
 import { z } from 'zod'
+import { PassportAlreadyExistsError } from '@/usecases/errors/passport-already-exist-error'
 
 export async function UpdateUser (request: FastifyRequest, reply:FastifyReply){
         try {
@@ -56,6 +57,9 @@ export async function UpdateUser (request: FastifyRequest, reply:FastifyReply){
             if(error instanceof  CPFAlreadyExistsError){
                 return reply.status(401).send({ message: error.message})
             }
+            if(error instanceof  PassportAlreadyExistsError){
+              return reply.status(401).send({ message: error.message})
+          }
             throw error
           }
 }
