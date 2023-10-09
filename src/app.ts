@@ -6,6 +6,7 @@ import { ZodError } from "zod";
 import { env } from "./env";
 import { InvalidAccessTokenError } from "./usecases/errors/invalid-access-token-error";
 import { leadsRoutes } from "./http/controllers/leads/routes";
+import { keysRoutes } from "./http/controllers/keys/route";
 
 export const fastifyApp = fastify()
 
@@ -20,6 +21,10 @@ fastifyApp.register(usersRoutes,{
 
 fastifyApp.register(leadsRoutes,{
   prefix: 'api/leads'
+})
+
+fastifyApp.register(keysRoutes,{
+  prefix: 'api/keys'
 })
 
   

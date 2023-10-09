@@ -10,6 +10,6 @@ export async function leadsRoutes(fastifyApp: FastifyInstance) {
 
     // listar leads
     fastifyApp.get('/', {
-        onRequest: [verifyTokenJWT],
+        onRequest: [verifyTokenJWT, verifyUserRole('ADMIN', 'SUPER')],
     }, ListLead)
 }
