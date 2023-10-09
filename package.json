@@ -21,7 +21,8 @@
     "test:coverage": "vitest --coverage",
     "test:ui": "vitest --ui",
     "test:only": "vitest related --watch",
-    "send:email": "tsx ./src/scripts/send-email-fake.ts"
+    "send:email": "tsx ./src/scripts/send-email-fake.ts",
+    "seed:user": "node ./build/repositories/seed/seed-super.js"
   },
   "keywords": [],
   "author": "",
