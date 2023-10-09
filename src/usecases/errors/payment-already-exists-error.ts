@@ -1,5 +1,5 @@
 export class PaymentAlreadyExistsError extends Error{
     constructor(){
-        super('Is not able payout payment same service excuted!')
+        super('Não é possível efetuar o pagamento do mesmo serviço executado!')
     }
 }

@@ -23,11 +23,6 @@ describe("Delete user (unit)", () => {
             name: 'Kaio Moreira',
             phone: '77-77777-7777',
             password: await hash('123456', 8),
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
         }); 
 
     });

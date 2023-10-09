@@ -1,5 +1,5 @@
 export class KeyAlreadyActive extends Error{
     constructor(){
-        super('Key already active')
+        super('Chave já ativa')
     }
 }

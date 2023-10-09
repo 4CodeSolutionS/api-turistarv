@@ -31,7 +31,7 @@ export class LoginUseCase{
         password
     }:IRequestLoginAccount):Promise<IResponseLoginAccount>{
         const findUserExists = await this.usersRepository.findByEmail(email)
-
+        
         if(!findUserExists){
             throw new CredentialsInvalidError()
         }

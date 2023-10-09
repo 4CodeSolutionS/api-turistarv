@@ -2,4 +2,4 @@
 * [x] Adicionar lib cpf-cnpj-validator para validar o CPF 
 * [x] Criar Blacklist de tokens usando o Redis com limpeza a cada 7 dias
 * [x] Adcionar funcionalidade Logout
-* [ ] Criar test unit and e2e para validar cpf e passport se existe ao atualizar o user
+* [x] Criar test unit and e2e para validar cpf e passport se existe ao atualizar o user

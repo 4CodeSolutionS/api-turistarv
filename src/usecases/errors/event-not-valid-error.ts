@@ -1,5 +1,5 @@
 export class EventNotValidError extends Error{
     constructor(){
-        super('Event not valid!')
+        super('Evento não válido!')
     }
 }

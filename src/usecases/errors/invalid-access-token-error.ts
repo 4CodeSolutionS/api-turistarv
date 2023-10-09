@@ -1,5 +1,5 @@
 export class InvalidAccessTokenError extends Error{
     constructor(){
-        super('Invalid access token!')
+        super('Chave token de acesso inválida!')
     }
 }

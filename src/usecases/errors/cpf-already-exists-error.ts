@@ -1,5 +1,5 @@
 export class CPFAlreadyExistsError extends Error{
     constructor(){
-        super('CPF already exists!')
+        super('O CPF já existe!')
     }
 }
