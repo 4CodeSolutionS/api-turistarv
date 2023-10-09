@@ -13,10 +13,8 @@ describe('Update User (e2e)', ()=>{
 
     test('should be able to update a user', async()=>{
         const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
-            cpf: "524.658.490-93",
             dateBirth: '2023-10-03',
             email: 'email1@test.com',
-            gender: 'MASCULINO',
             name: 'Kaio Moreira',
             phone: '77-77777-7777',
             password: '123456',
@@ -42,23 +40,15 @@ describe('Update User (e2e)', ()=>{
             id: user.id,
             name: 'Kaio Moreira',
             dateBirth: '1995-10-03',
-            gender: 'MASCULINO',
             phone: '11999999999',
-            rvLength: 10,
-            rvPlate: 'ABC-789',
-            touristType: 'CARAVANISTA',
-            tugPlate: 'ABC-999',
-            vehicleType: 'MOTORHOME',
         })
         expect(response.statusCode).toEqual(200)
     })
 
     test('should not be able to update a user with id user invalid', async()=>{
         const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
-            cpf: "524.658.490-11",
             dateBirth: '2023-10-03',
             email: 'email2@test.com',
-            gender: 'MASCULINO',
             name: 'Kaio Moreira',
             phone: '77-77777-7777',
             password: '123456',
@@ -84,13 +74,7 @@ describe('Update User (e2e)', ()=>{
             id: 'dee2a509-b42d-4c80-a733-d76bce3a2f10',
             name: 'Kaio Moreira',
             dateBirth: '1995-10-03',
-            gender: 'MASCULINO',
             phone: '11999999999',
-            rvLength: 10,
-            rvPlate: 'ABC-789',
-            touristType: 'CARAVANISTA',
-            tugPlate: 'ABC-999',
-            vehicleType: 'MOTORHOME',
         })
         expect(response.statusCode).toEqual(404)
     })

@@ -43,18 +43,10 @@ describe("Verify email user (unit)", () => {
 
     test("Should be able to verify a new account", async () => {
         const {user} = await registerUseCase.execute({
-            cpf: "1234567891110",
-            dateBirth: new Date('1999-06-01'),
             email: 'user1-test@email.com',
-            gender: 'M',
             name: 'John Doe',
             phone: '77-77777-7777',
             password: await hash('123456', 8),
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
         })
         const userToken = await usersTokensRepositoryInMemory.findByUserId(user.id)
 
@@ -69,18 +61,10 @@ describe("Verify email user (unit)", () => {
     });
     test("Should not be able to verify a user active ", async () => {
         const {user} = await registerUseCase.execute({
-            cpf: "004.005.490-00",
-            dateBirth: new Date('1999-06-01'),
             email: 'user2-test@email.com',
-            gender: 'M',
             name: 'John Doe',
             phone: '77-77777-7777',
             password: await hash('123456', 8),
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
         })
         const userToken = await usersTokensRepositoryInMemory.findByUserId(user.id)
 
@@ -120,18 +104,10 @@ describe("Verify email user (unit)", () => {
     test("Should not be able to verify a account with token expired", async () => {
         vi.setSystemTime( new Date(2023, 8, 23, 19, 0, 0))
         const {user} = await registerUseCase.execute({
-            cpf: "1234567891110",
-            dateBirth: new Date('1999-06-01'),
             email: 'user1-test@email.com',
-            gender: 'M',
             name: 'John Doe',
             phone: '77-77777-7777',
             password: await hash('123456', 8),
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
         })
         const userToken = await usersTokensRepositoryInMemory.findByUserId(user.id)
 

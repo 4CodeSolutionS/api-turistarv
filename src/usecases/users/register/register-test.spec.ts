@@ -30,18 +30,10 @@ describe("Register user (unit)", () => {
 
     test("Should be able to register a new account with cpf", async () => {
         const { user } = await stu.execute({ 
-            cpf: "12345678910",
-            dateBirth: new Date('1999-06-01'),
             email: 'email@test.com',
-            gender: 'M',
             name: 'Kaio Moreira',
             phone: '77-77777-7777',
             password: '123456',
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
         });
 
         // confirmar se email foi enviado
@@ -54,134 +46,22 @@ describe("Register user (unit)", () => {
         )
     });
     
-    test("Should be able to register a new account with cpf", async () => {
-        const { user } = await stu.execute({ 
-            passport: "12345678910",
-            dateBirth: new Date('1999-06-01'),
-            email: 'email@test.com',
-            gender: 'M',
-            name: 'Kaio Moreira',
-            phone: '77-77777-7777',
-            password: '123456',
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
-        });
-
-        // confirmar se email foi enviado
-        const message = await sendMailProvider.findMessageSent(user.email)
-        expect(user.id).toEqual(expect.any(String))
-        expect(message).toEqual(
-            expect.objectContaining({
-                subject: 'Confirmação de email',
-            })
-        )
-    });
-
     test("Should not be able to register a new account with Email already exists", async () => {
         const email = 'email@test.com'
 
         await stu.execute({ 
-            cpf: "12345678910",
-            dateBirth: new Date('1999-06-01'),
             email,
-            gender: 'M',
             name: 'John Doe',
             phone: '77-77777-7777',
             password: '123456',
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
         });
 
        await expect(()=> stu.execute({
-            cpf: "125678910",
-            dateBirth: new Date('1999-06-01'),
             email,
-            gender: 'M',
             name: 'John Doe',
             phone: '77-77777-7777',
             password: '123456',
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
         }),
         ).rejects.toBeInstanceOf(EmailAlreadyExistsError)
-    });
-
-    test("Should not be able to register a new account with CPF already exists", async () => {
-        const cpf = "12345678910"
-
-        await stu.execute({ 
-            cpf,
-            dateBirth: new Date('1999-06-01'),
-            email: 'email1@test.com',
-            gender: 'M',
-            name: 'John Doe',
-            phone: '77-77777-7777',
-            password: '123456',
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
-        });
-
-       await expect(()=> stu.execute({
-            cpf,
-            dateBirth: new Date('1999-06-01'),
-            email: 'email2@test.com',
-            gender: 'M',
-            name: 'John Doe',
-            phone: '77-77777-7777',
-            password: '123456',
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
-        }),
-        ).rejects.toBeInstanceOf(CPFAlreadyExistsError)
-    });
-
-    test("Should not be able to register a new account with Passport already exists", async () => {
-        const passport = "123456789101212"
-
-        const x = await stu.execute({ 
-            passport,
-            dateBirth: new Date('1999-06-01'),
-            email: 'email1@test.com',
-            gender: 'M',
-            name: 'John Doe',
-            phone: '77-77777-7777',
-            password: '1234567',
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
-        });
-
-       await expect(()=> stu.execute({
-            passport,
-            dateBirth: new Date('1999-06-01'),
-            email: 'email2@test.com',
-            gender: 'M',
-            name: 'John Doe',
-            phone: '77-77777-7777',
-            password: '1234567',
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
-        }),
-        ).rejects.toBeInstanceOf(PassportAlreadyExistsError)
     });
 });

@@ -16,7 +16,6 @@ describe('Send email forgot password (e2e)', ()=>{
             cpf: "524.658.490-93",
             dateBirth: '2023-10-03',
             email: 'email1@test.com',
-            gender: 'MASCULINO',
             name: 'Kaio Moreira',
             phone: '77-77777-7777',
             password: '123456',

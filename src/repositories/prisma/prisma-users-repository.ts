@@ -1,4 +1,4 @@
-import { $Enums, Prisma, Role, User } from "@prisma/client";
+import { Prisma, Role, User } from "@prisma/client";
 import { IUsersRepository } from "../interface-users-repository";
 import { prisma } from "@/lib/prisma";
 
@@ -26,17 +26,10 @@ export class PrismaUsersRepository implements IUsersRepository{
                 emailActive: true,
                 dateBirth: true,
                 phone: true,
-                acommodations: true,
                 address: true,
                 leads: true,
                 posts: true,
-                gender: true,
                 role: true,
-                rvLength: true,
-                tugPlate: true,
-                rvPlate: true,
-                touristType: true,
-                vehicleType: true,
                 createdAt: true,
             }
         }) as unknown as User
@@ -85,17 +78,10 @@ export class PrismaUsersRepository implements IUsersRepository{
                 emailActive: true,
                 dateBirth: true,
                 phone: true,
-                acommodations: true,
                 address: true,
                 leads: true,
                 posts: true,
-                gender: true,
                 role: true,
-                rvLength: true,
-                tugPlate: true,
-                rvPlate: true,
-                touristType: true,
-                vehicleType: true,
                 createdAt: true,
             }
         }) as unknown as User
@@ -116,17 +102,10 @@ export class PrismaUsersRepository implements IUsersRepository{
                 emailActive: true,
                 dateBirth: true,
                 phone: true,
-                acommodations: true,
                 address: true,
                 leads: true,
                 posts: true,
-                gender: true,
                 role: true,
-                rvLength: true,
-                tugPlate: true,
-                rvPlate: true,
-                touristType: true,
-                vehicleType: true,
                 createdAt: true,
             }
         }) as unknown as User
@@ -146,17 +125,10 @@ export class PrismaUsersRepository implements IUsersRepository{
                 emailActive: true,
                 dateBirth: true,
                 phone: true,
-                acommodations: true,
                 address: true,
                 leads: true,
                 posts: true,
-                gender: true,
                 role: true,
-                rvLength: true,
-                tugPlate: true,
-                rvPlate: true,
-                touristType: true,
-                vehicleType: true,
                 createdAt: true,
             }
         }) as unknown as User
@@ -177,17 +149,10 @@ export class PrismaUsersRepository implements IUsersRepository{
                     emailActive: true,
                     dateBirth: true,
                     phone: true,
-                    acommodations: true,
                     address: true,
                     leads: true,
                     posts: true,
-                    gender: true,
                     role: true,
-                    rvLength: true,
-                    tugPlate: true,
-                    rvPlate: true,
-                    touristType: true,
-                    vehicleType: true,
                     createdAt: true,
                 }
             }) as unknown as User
@@ -206,17 +171,10 @@ export class PrismaUsersRepository implements IUsersRepository{
                 emailActive: true,
                 dateBirth: true,
                 phone: true,
-                acommodations: true,
                 address: true,
                 leads: true,
                 posts: true,
-                gender: true,
                 role: true,
-                rvLength: true,
-                tugPlate: true,
-                rvPlate: true,
-                touristType: true,
-                vehicleType: true,
                 createdAt: true,
             }
         }) as unknown as User[]
@@ -237,17 +195,10 @@ export class PrismaUsersRepository implements IUsersRepository{
                 emailActive: true,
                 dateBirth: true,
                 phone: true,
-                acommodations: true,
                 address: true,
                 leads: true,
                 posts: true,
-                gender: true,
                 role: true,
-                rvLength: true,
-                tugPlate: true,
-                rvPlate: true,
-                touristType: true,
-                vehicleType: true,
                 createdAt: true,
             }
         }) as unknown as User
@@ -268,17 +219,10 @@ export class PrismaUsersRepository implements IUsersRepository{
                 emailActive: true,
                 dateBirth: true,
                 phone: true,
-                acommodations: true,
                 address: true,
                 leads: true,
                 posts: true,
-                gender: true,
                 role: true,
-                rvLength: true,
-                tugPlate: true,
-                rvPlate: true,
-                touristType: true,
-                vehicleType: true,
                 createdAt: true,
             }
         }) as unknown as User

@@ -1,26 +1,23 @@
 import { env } from "@/env";
 import { IUsersRepository } from "@/repositories/interface-users-repository";
-import { CPFAlreadyExistsError } from "@/usecases/errors/cpf-already-exists-error";
 import { EmailAlreadyExistsError } from "@/usecases/errors/email-already-exists-error";
-import { Tourist, User, Vehicle } from "@prisma/client";
 import { hash } from 'bcrypt'
 import 'dotenv/config'
 import { randomUUID } from "crypto";
 import { IDateProvider } from "@/providers/DateProvider/interface-date-provider";
 import { ITokensRepository } from "@/repositories/interface-tokens-repository";
 import { IMailProvider } from "@/providers/MailProvider/interface-mail-provider";
-import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exist-error";
+import { User } from "@prisma/client";
 
 interface IRequestRegisterAccount {
     email: string,
     name: string,
     password: string,
-    gender?: string,
     phone?: string,
     rvLength?: number,
     rvPlate?: string,
-    touristType?: Tourist,
-    vehicleType?: Vehicle,
+    touristType?: 'CARAVANISTA' | 'ADMIRADOR',
+    vehicleType?: 'MOTORHOME' | 'TRAILER' | 'CAMPER' | 'TENT',
 }
 interface IResponseRegisterAccount {
     user: User
@@ -36,7 +33,6 @@ export class RegisterUseCase{
 
     async execute({
         email,
-        gender,
         name,
         password,
         phone,
@@ -56,14 +52,9 @@ export class RegisterUseCase{
 
         const user = await this.usersRepository.create({
             email,
-            gender,
             name,
             password: criptingPassword,
             phone,
-            rvLength,
-            rvPlate,
-            touristType,
-            vehicleType,
         })
 
          // pegar template de verificaçao de email

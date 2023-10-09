@@ -21,7 +21,6 @@ describe('Reset passowrd (e2e)', ()=>{
             cpf: "524.658.490-93",
             dateBirth: '2023-10-03',
             email: 'email1@test.com',
-            gender: 'MASCULINO',
             name: 'Kaio Moreira',
             phone: '77-77777-7777',
             password: '123456',
@@ -67,19 +66,12 @@ describe('Reset passowrd (e2e)', ()=>{
                 name:'user1',
                 email: 'user3@test.com',
                 cpf: "111.456.789-10",
-                gender: 'MASCULINO',
                 phone: '77-77777-7777',
                 password: await hash('123456', 8),
                 emailActive: false,
                 dateBirth: new Date(2023, 10, 24),
-                rvLength: 10,
-                rvPlate: 'ABC-1234',
-                touristType: 'ADMIRADOR',
-                tugPlate: 'ABC-1234',
-                vehicleType: 'CAMPER',
             }
         })
-
         vi.setSystemTime( new Date(2023, 10, 24, 7, 0, 0))
         await request(fastifyApp.server)
         .post(`/api/users/forgot-password`)
@@ -107,9 +99,7 @@ describe('Reset passowrd (e2e)', ()=>{
             }
         })
 
-        const oldPassword = await hash('123456', 8)
         expect(response.statusCode).toEqual(401)
-        expect(findUser.password !== oldPassword).toBeTruthy()
         
     })
 })

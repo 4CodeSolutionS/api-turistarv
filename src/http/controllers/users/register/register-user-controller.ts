@@ -14,7 +14,6 @@ export async function RegisterUser (request: FastifyRequest, reply:FastifyReply)
               email: z.string().email().nonempty(), 
               password: z.string().min(6).nonempty(),
               phone: z.string().nonempty().optional(), 
-              gender: z.enum(['MASCULINO', 'FEMININO', 'OUTRO']).optional(), 
               rvLength: z.number().nonnegative().optional(),
               rvPlate: z.string().nonempty().optional(),
               touristType: z.enum(['CARAVANISTA', 'ADMIRADOR']),
@@ -24,7 +23,6 @@ export async function RegisterUser (request: FastifyRequest, reply:FastifyReply)
             const { 
                 email, 
                 password,
-                gender,
                 name,
                 phone,
                 rvLength,
@@ -38,7 +36,6 @@ export async function RegisterUser (request: FastifyRequest, reply:FastifyReply)
             const {user} = await registerUseCase.execute({
                 email, 
                 password,
-                gender,
                 name,
                 phone,
                 rvLength,

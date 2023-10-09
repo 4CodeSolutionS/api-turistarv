@@ -17,18 +17,6 @@ enum Role {
   SUPER
 }
 
-enum Tourist {
-  CARAVANISTA
-  ADMIRADOR
-}
-
-enum Vehicle {
-  MOTORHOME
-  TRAILER
-  CAMPER
-  TENT
-}
-
 model User {
   id              String    @id @unique @default(uuid())
   idCustomerAsaas String?
@@ -37,23 +25,16 @@ model User {
   password        String
   phone           String?
   passport        String?   @unique
-  gender          String?
   dateBirth       DateTime?
   cpf             String?   @unique
-  rvLength        Decimal?
-  tugPlate        String?
-  rvPlate         String?
-  touristType     Tourist?
-  vehicleType     Vehicle?  @default(CAMPER)
   emailActive     Boolean   @default(false)
   role            Role      @default(GUEST)
   createdAt       DateTime  @default(now())
 
-  leads         Lead[]
-  posts         Post[]
-  acommodations Acommodation[]
-  address       Address[]
-  tokens        Token[]
+  leads   Lead[]
+  posts   Post[]
+  address Address[]
+  tokens  Token[]
 
   @@map("users")
 }
@@ -96,34 +77,6 @@ model Post {
   idUser String?
 
   @@map("posts")
-}
-
-model Box {
-  id        String   @id @unique @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  active    Boolean  @default(true)
-
-  acommodation   Acommodation? @relation(fields: [idAcommodation], references: [id])
-  idAcommodation String?
-
-  @@map("boxes")
-}
-
-model Acommodation {
-  id            String  @id @unique @default(uuid())
-  name          String
-  images        String
-  convenience   String
-  propertyRules String
-  active        Boolean @default(true)
-
-  user   User   @relation(fields: [idUser], references: [id])
-  idUser String
-
-  boxes Box[]
-
-  @@map("acommodations")
 }
 
 model Address {

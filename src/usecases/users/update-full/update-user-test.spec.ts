@@ -22,15 +22,9 @@ describe("Update user (unit)", () => {
             cpf: "524.658.490-93",
             dateBirth: '2023-10-03',
             email: 'email1@test.com',
-            gender: 'MASCULINO',
             name: 'Kaio Moreira',
             phone: '77-77777-7777',
             password: await hash('123456', 8),
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
         })
     });
 
@@ -38,26 +32,15 @@ describe("Update user (unit)", () => {
         const { user } = await stu.execute({ 
             id: "bd3234d7-21e6-4e1d-8129-8b823c4d331a",
             dateBirth: new Date('1995-10-03'),
-            gender: 'FEMININO',
             name: 'Sarah Moreira',
             phone: '77-7777-9999',
-            rvLength: 15,
-            rvPlate: 'ABC-1234',
-            touristType: 'CARAVANISTA',
-            tugPlate: 'ABC-7899',
-            vehicleType: 'MOTORHOME',
         });
         expect(user).toEqual(
             expect.objectContaining({
                 id: "bd3234d7-21e6-4e1d-8129-8b823c4d331a",
-                touristType: 'CARAVANISTA',
-                vehicleType: 'MOTORHOME',
                 dateBirth: new Date('1995-10-03'),
                 phone: '77-7777-9999',
-                gender: 'FEMININO',
                 name: 'Sarah Moreira',
-                rvLength: new Prisma.Decimal(15),
-                tugPlate: 'ABC-7899',
             }),
         )
     });
@@ -66,14 +49,8 @@ describe("Update user (unit)", () => {
         await expect(()=> stu.execute({ 
             id: 'id-user-3',
             dateBirth: new Date('1995-10-03'),
-            gender: 'FEMININO',
             name: 'Sarah Moreira',
             phone: '77-7777-9999',
-            rvLength: 15,
-            rvPlate: 'ABC-1234',
-            touristType: 'CARAVANISTA',
-            tugPlate: 'ABC-7899',
-            vehicleType: 'MOTORHOME',
         })).rejects.toBeInstanceOf(ResourceNotFoundError)
     });
 });

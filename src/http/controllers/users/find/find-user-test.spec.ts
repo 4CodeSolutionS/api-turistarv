@@ -14,10 +14,8 @@ describe('Find User (e2e)', ()=>{
 
     test('should be able to find a user', async()=>{
         const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
-            cpf: "524.658.490-93",
             dateBirth: '2023-10-03',
             email: 'email1@test.com',
-            gender: 'MASCULINO',
             name: 'Kaio Moreira',
             phone: '77-77777-7777',
             password: '123456',
@@ -27,13 +25,13 @@ describe('Find User (e2e)', ()=>{
             tugPlate: 'ABC-1234',
             vehicleType: 'CAMPER',
         })
-
         const responseLoginUser = await request(fastifyApp.server)
         .post('/api/users/login')
         .send({
             email: 'email1@test.com',
             password: '123456',
         })
+
 
         const {accessToken, user} = responseLoginUser.body
 
@@ -47,10 +45,7 @@ describe('Find User (e2e)', ()=>{
 
     test('should not be able to find a user with invalid id', async()=>{
         const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
-            cpf: "524.658.490-97",
-            dateBirth: '2023-10-03',
             email: 'email2@test.com',
-            gender: 'MASCULINO',
             name: 'Kaio Moreira',
             phone: '77-77777-7777',
             password: '123456',

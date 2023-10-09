@@ -1,19 +1,13 @@
 import { IUsersRepository } from "@/repositories/interface-users-repository";
-import { Tourist, User, Vehicle } from "@prisma/client";
 import 'dotenv/config'
 import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
+import { User } from "@prisma/client";
 
 interface IRequestUpdateUser {
     id: string,
-    gender: string,
     name: string,
     phone: string,
     dateBirth: Date,
-    rvLength: number,
-    rvPlate: string,
-    touristType: Tourist,
-    tugPlate: string,
-    vehicleType: Vehicle,
 }
 interface IResponseUpdateUser {
     user: User
@@ -26,15 +20,9 @@ export class UpdateUserUseCase{
 
     async execute({
         id,
-        gender,
         name,
         phone,
         dateBirth,
-        rvLength,
-        rvPlate,
-        touristType,
-        tugPlate,
-        vehicleType
     }:IRequestUpdateUser):Promise<IResponseUpdateUser>{
         const findUserExists = await this.usersRepository.getUserSecurity(id)
 
@@ -44,15 +32,9 @@ export class UpdateUserUseCase{
 
        const userUpdated = await this.usersRepository.update({
             id,
-            gender,
             name,
             phone,
             dateBirth,
-            rvLength,
-            rvPlate,
-            touristType,
-            tugPlate,
-            vehicleType
         })
         
         return {

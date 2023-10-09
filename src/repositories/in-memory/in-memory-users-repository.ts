@@ -1,4 +1,4 @@
-import { Prisma, $Enums, User, Role, Tourist, Vehicle } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import { IUsersRepository } from "../interface-users-repository";
 import { randomUUID } from "crypto";
 
@@ -29,14 +29,8 @@ export class InMemoryUsersRepository implements IUsersRepository{
         passport: user.passport,
         name: user.name,
         phone: user.phone,
-        gender: user.gender,
         role: user.role,
         dateBirth: user.dateBirth,
-        rvLength: user.rvLength,
-        tugPlate: user.tugPlate,
-        rvPlate: user.rvPlate,
-        touristType: user.touristType,
-        vehicleType: user.vehicleType,
         emailActive: user.emailActive,
         createdAt: user.createdAt,
     } as User
@@ -76,19 +70,12 @@ export class InMemoryUsersRepository implements IUsersRepository{
         cpf,
         dateBirth,
         email,
-        gender,
         name,
         passport,
         password,
         phone,
-        rvLength,
-        rvPlate,
-        touristType,
-        tugPlate,
-        vehicleType,
         emailActive,
         role,
-        acommodations,
         address,
         leads,
         posts,
@@ -97,19 +84,12 @@ export class InMemoryUsersRepository implements IUsersRepository{
         const user = {
             id: id ? id : randomUUID(),
             idCustomerAsaas: idCustomerAsaas ? idCustomerAsaas : null,
-            dateBirth: new Date(dateBirth),
+            dateBirth: dateBirth ? new Date(dateBirth) : null,
             email,
-            gender,
             name,
             passport: passport ? passport : null,
             password,
-            phone,
-            rvLength: new Prisma.Decimal(rvLength.toString()),
-            rvPlate,
-            touristType,
-            tugPlate,
-            vehicleType,
-            acommodations,
+            phone: phone ? phone : null,
             address: [],
             leads: [],
             posts: [],
@@ -183,29 +163,19 @@ export class InMemoryUsersRepository implements IUsersRepository{
         id,
         dateBirth,
         email,
-        gender,
         name,
         passport,
+        cpf,
         phone,
-        rvLength,
-        rvPlate,
-        touristType,
-        tugPlate,
-        vehicleType,
     }:Prisma.UserUncheckedUpdateInput){
         const userIndex = this.users.findIndex(user => user.id === id)
         
         this.users[userIndex].dateBirth = new Date(dateBirth as string)
         this.users[userIndex].email = email as string
-        this.users[userIndex].gender = gender as string
         this.users[userIndex].name = name as string
         this.users[userIndex].passport = passport as string | null
         this.users[userIndex].phone = phone as string
-        this.users[userIndex].rvLength = new Prisma.Decimal(rvLength as string)
-        this.users[userIndex].rvPlate = rvPlate as string
-        this.users[userIndex].touristType = touristType as Tourist
-        this.users[userIndex].tugPlate = tugPlate as string
-        this.users[userIndex].vehicleType = vehicleType as Vehicle
+        this.users[userIndex].cpf = cpf as string
 
         return this.users[userIndex]
     }

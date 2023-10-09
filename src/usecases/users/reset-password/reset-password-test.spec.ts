@@ -34,18 +34,11 @@ describe("Reset password (unit)", () => {
         )
 
         await usersRepositoryInMemory.create({
-            cpf: "12345678910",
             dateBirth: new Date('1999-06-01'),
             email: 'user-test@email.com',
-            gender: 'M',
             name: 'John Doe',
             phone: '77-77777-7777',
             password: await hash('123456', 8),
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
         })
 
         vi.useFakeTimers()
@@ -57,18 +50,10 @@ describe("Reset password (unit)", () => {
 
     test("Should be able to reset passwod account", async () => {
         const {user} = await registerUseCase.execute({
-            cpf: "1234567891110",
-            dateBirth: new Date('1999-06-01'),
             email: 'user1-test@email.com',
-            gender: 'M',
             name: 'John Doe',
             phone: '77-77777-7777',
             password: await hash('123456', 8),
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
         })
         const oldPassword = user.password
         const userToken = await usersTokensRepositoryInMemory.findByUserId(user.id) as Token
