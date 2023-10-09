@@ -40,6 +40,6 @@ export async function usersRoutes(fastifyApp: FastifyInstance) {
     fastifyApp.delete('/:id', {onRequest: [verifyTokenJWT]}, DeleteUser)
 
     // access admin user
-    fastifyApp.patch('/access-admin', {onRequest: [verifyTokenJWT, verifyUserRole('ADMIN', 'SUPER')]}, AccessAdminUser)
+    fastifyApp.patch('/access-admin', {onRequest: [verifyTokenJWT, verifyUserRole('SUPER')]}, AccessAdminUser)
 
 }
