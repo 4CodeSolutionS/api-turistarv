@@ -8,6 +8,8 @@ interface IRequestUpdateUser {
     name: string,
     phone: string,
     dateBirth: Date,
+    cpf?: string,
+    passport?: string,
 }
 interface IResponseUpdateUser {
     user: User
@@ -23,6 +25,8 @@ export class UpdateUserUseCase{
         name,
         phone,
         dateBirth,
+        cpf,
+        passport
     }:IRequestUpdateUser):Promise<IResponseUpdateUser>{
         const findUserExists = await this.usersRepository.getUserSecurity(id)
 
@@ -35,6 +39,8 @@ export class UpdateUserUseCase{
             name,
             phone,
             dateBirth,
+            cpf,
+            passport
         })
         
         return {

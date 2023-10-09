@@ -4,7 +4,6 @@ import { PassportAlreadyExistsError } from '@/usecases/errors/passport-already-e
 import { makeRegisterUser } from '@/usecases/factories/users/make-register-user-usecase'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
-import {cpf as CPF} from 'cpf-cnpj-validator'
 import { CPFInvalidError } from '@/usecases/errors/cpf-invalid-error'
 
 export async function RegisterUser (request: FastifyRequest, reply:FastifyReply){
@@ -50,15 +49,6 @@ export async function RegisterUser (request: FastifyRequest, reply:FastifyReply)
           } catch (error) {
             if(error instanceof  EmailAlreadyExistsError){
               return reply.status(409).send({ message: error.message})
-            }
-            if(error instanceof  CPFAlreadyExistsError){
-                return reply.status(409).send({ message: error.message})
-            }
-            if(error instanceof  PassportAlreadyExistsError){
-              return reply.status(409).send({ message: error.message})
-            }
-            if(error instanceof  CPFInvalidError){
-              return reply.status(401).send({ message: error.message})
             }
             throw error
           }
