@@ -9,6 +9,8 @@ import { FindUser } from './find/find-user-controller'
 import { DeleteUser } from './delete/delete-user-controller'
 import { UpdateUser } from './update-full/update-user-controller'
 import { LogoutUser } from './logout/logout-user-controller'
+import { verifyUserRole } from '@/http/middlewares/verify-user-role'
+import { AccessAdminUser } from './access-admin/access-admin-users-controller'
 export async function usersRoutes(fastifyApp: FastifyInstance) {
     // register user
     fastifyApp.post('/', RegisterUser)
@@ -38,6 +40,6 @@ export async function usersRoutes(fastifyApp: FastifyInstance) {
     fastifyApp.delete('/:id', {onRequest: [verifyTokenJWT]}, DeleteUser)
 
     // access admin user
-    // fastifyApp.patch('/access-admin', {onRequest: [verifyTokenJWT, verifyUserRole('GUEST', 'ADMIN', 'SUPER')]}, AccessAdminUser)
+    fastifyApp.patch('/access-admin', {onRequest: [verifyTokenJWT, verifyUserRole('ADMIN', 'SUPER')]}, AccessAdminUser)
 
 }

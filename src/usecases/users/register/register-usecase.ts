@@ -19,7 +19,7 @@ interface IRequestRegisterAccount {
     touristType?: 'CARAVANISTA' | 'ADMIRADOR',
     vehicleType?: 'MOTORHOME' | 'TRAILER' | 'CAMPER' | 'TENT',
 }
-interface IResponseRegisterAccount {
+export interface IResponseRegisterAccount {
     user: User
 }
 
