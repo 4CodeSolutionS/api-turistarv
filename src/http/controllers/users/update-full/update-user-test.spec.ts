@@ -11,7 +11,7 @@ describe('Update User (e2e)', ()=>{
         await fastifyApp.close()
     })
 
-    test('should be able to update a user', async()=>{
+    test('should be able to update a user with cpf', async()=>{
         const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
             dateBirth: '2023-10-03',
             email: 'email1@test.com',
@@ -41,6 +41,42 @@ describe('Update User (e2e)', ()=>{
             name: 'Kaio Moreira',
             dateBirth: '1995-10-03',
             phone: '11999999999',
+            cpf: '45274090001'
+        })
+        expect(response.statusCode).toEqual(200)
+    })
+
+    test('should be able to update a user with passport', async()=>{
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            dateBirth: '2023-10-03',
+            email: 'email5@test.com',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
+        const responseLoginUser = await request(fastifyApp.server)
+        .post('/api/users/login')
+        .send({
+            email: 'email5@test.com',
+            password: '123456',
+        })
+
+        const {accessToken, user} = responseLoginUser.body
+
+        const response = await request(fastifyApp.server)
+        .put('/api/users')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({
+            id: user.id,
+            name: 'Kaio Moreira',
+            dateBirth: '1995-10-03',
+            phone: '11999999999',
+            passport: '45274090001'
         })
         expect(response.statusCode).toEqual(200)
     })
