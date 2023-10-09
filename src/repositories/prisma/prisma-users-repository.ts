@@ -246,8 +246,23 @@ export class PrismaUsersRepository implements IUsersRepository{
             where: {
                 id: data.id as string
             },
+            select: {
+                id: true,
+                name: true,
+                cpf: true,
+                passport: true,
+                email: true,
+                emailActive: true,
+                dateBirth: true,
+                phone: true,
+                address: true,
+                leads: true,
+                posts: true,
+                role: true,
+                createdAt: true,
+            },
             data
-        })
+        }) as unknown as User
 
         return user
     }
