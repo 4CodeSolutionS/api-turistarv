@@ -12,9 +12,9 @@ export async function RegisterUser (request: FastifyRequest, reply:FastifyReply)
               name: z.string().min(4).nonempty(), 
               email: z.string().email().nonempty(), 
               password: z.string().min(6).nonempty(),
-              phone: z.string().nonempty().optional(), 
-              rvLength: z.number().nonnegative().optional(),
-              rvPlate: z.string().nonempty().optional(),
+              phone: z.string().optional(), 
+              rvLength: z.number().optional(),
+              rvPlate: z.string().optional(),
               touristType: z.enum(['CARAVANISTA', 'ADMIRADOR']),
               vehicleType: z.enum(['MOTORHOME', 'TRAILER', 'CAMPER', 'TENT']).optional(),
             })

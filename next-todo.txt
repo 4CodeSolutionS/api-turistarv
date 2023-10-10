@@ -3,4 +3,4 @@
 * [x] Criar Blacklist de tokens usando o Redis com limpeza a cada 7 dias
 * [x] Adcionar funcionalidade Logout
 * [x] Criar test unit and e2e para validar cpf e passport se existe ao atualizar o user
-* [ ] Criar domain para conceder permissão de admin para os usuarios
+* [x] Criar domain para conceder permissão de admin para os usuarios
