@@ -62,12 +62,12 @@ model Lead {
 }
 
 model Post {
-  id        String   @id @unique @default(uuid())
-  title     String
-  body      String
-  image     String
-  createdAt DateTime @default(now())
-  active    Boolean  @default(true)
+  id     String   @id @unique @default(uuid())
+  title  String
+  body   String
+  image  String
+  date   DateTime @default(now())
+  active Boolean  @default(true)
 
   user   User?   @relation(fields: [idUser], references: [id])
   idUser String?
