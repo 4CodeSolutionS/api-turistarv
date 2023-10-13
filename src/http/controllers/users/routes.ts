@@ -20,7 +20,7 @@ export async function usersRoutes(fastifyApp: FastifyInstance) {
     fastifyApp.post('/login', LoginUser)
 
     // email exists user
-    fastifyApp.post('/email-exists', EmailExists)
+    fastifyApp.get('/email-exists', EmailExists)
 
     // logout user
     fastifyApp.post('/logout', {onRequest: [verifyTokenJWT]}, LogoutUser)
