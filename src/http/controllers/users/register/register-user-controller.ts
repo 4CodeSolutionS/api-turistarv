@@ -1,10 +1,7 @@
-import { CPFAlreadyExistsError } from '@/usecases/errors/cpf-already-exists-error'
 import { EmailAlreadyExistsError } from '@/usecases/errors/email-already-exists-error'
-import { PassportAlreadyExistsError } from '@/usecases/errors/passport-already-exist-error'
 import { makeRegisterUser } from '@/usecases/factories/users/make-register-user-usecase'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
-import { CPFInvalidError } from '@/usecases/errors/cpf-invalid-error'
 
 export async function RegisterUser (request: FastifyRequest, reply:FastifyReply){
         try {

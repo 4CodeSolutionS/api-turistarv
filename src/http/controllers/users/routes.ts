@@ -11,12 +11,16 @@ import { UpdateUser } from './update-full/update-user-controller'
 import { LogoutUser } from './logout/logout-user-controller'
 import { verifyUserRole } from '@/http/middlewares/verify-user-role'
 import { AccessAdminUser } from './access-admin/access-admin-users-controller'
+import { EmailExists } from './email-exists/email-exists-controller'
 export async function usersRoutes(fastifyApp: FastifyInstance) {
     // register user
     fastifyApp.post('/', RegisterUser)
 
     // login user
     fastifyApp.post('/login', LoginUser)
+
+    // email exists user
+    fastifyApp.post('/email-exists', EmailExists)
 
     // logout user
     fastifyApp.post('/logout', {onRequest: [verifyTokenJWT]}, LogoutUser)
@@ -41,5 +45,6 @@ export async function usersRoutes(fastifyApp: FastifyInstance) {
 
     // access admin user
     fastifyApp.patch('/access-admin', {onRequest: [verifyTokenJWT, verifyUserRole('SUPER')]}, AccessAdminUser)
+
 
 }
