@@ -10,7 +10,7 @@ export async function EmailExists (request: FastifyRequest, reply:FastifyReply){
 
             const { 
                 email
-            } = userSchema.parse(request.body)
+            } = userSchema.parse(request.query)
 
             const findUserUseCase = await makeVerifyEmailUser()
             
