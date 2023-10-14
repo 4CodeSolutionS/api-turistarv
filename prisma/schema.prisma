@@ -63,14 +63,13 @@ model Lead {
 
 model Post {
   id     String   @id @unique @default(uuid())
+  user   User?    @relation(fields: [idUser], references: [id])
+  idUser String?
   title  String
   body   String
-  image  String
   date   DateTime @default(now())
   active Boolean  @default(true)
-
-  user   User?   @relation(fields: [idUser], references: [id])
-  idUser String?
+  image  String
 
   @@map("posts")
 }

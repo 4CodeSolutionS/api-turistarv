@@ -4,7 +4,7 @@ import File from '@/lib/interfaces'
 
 declare module 'fastify' {
   interface FastifyRequest {
-    files: File
+    // files: File
     user:{
       role: Role
       id: string;

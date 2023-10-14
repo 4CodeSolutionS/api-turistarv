@@ -1,7 +1,8 @@
 import fastify, { FastifyError, FastifyReply, FastifyRequest } from "fastify";
 import fastifyCors from '@fastify/cors'
 import "dotenv/config"
-import multer from "fastify-multer";
+// import multer from "fastify-multer";
+import fastifyMultipart from "@fastify/multipart";
 import { usersRoutes } from "./http/controllers/users/routes";
 import { ZodError } from "zod";
 import { env } from "./env";
@@ -19,11 +20,11 @@ fastifyApp.register(fastifyCors, {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 })
 
+fastifyApp.register(fastifyMultipart, {attachFieldsToBody: true})
 
 fastifyApp.register(urlEncodede)
 
-fastifyApp.register(multer.contentParser)
-
+// fastifyApp.register(multer.contentParser)
 
 fastifyApp.register(usersRoutes,{
     prefix: 'api/users'

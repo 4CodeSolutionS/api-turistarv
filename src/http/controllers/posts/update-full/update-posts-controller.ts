@@ -4,10 +4,14 @@ import { z } from 'zod'
 import * as fs from 'fs'
 import { randomUUID } from 'crypto'
 import { makeCreatePost } from '@/usecases/factories/posts/make-create-posts-usecase'
+import { makeUpdatePost } from '@/usecases/factories/posts/make-update-posts-usecase'
 
-export async function CreatePost (request: FastifyRequest, reply:FastifyReply){
+export async function UpdatePost (request: FastifyRequest, reply:FastifyReply){
         try {
             const multiparformSchema = z.object({
+                id: z.object({
+                  value: z.string().uuid().nonempty()
+                }),
                 idUser: z.object({
                   value: z.string().uuid().nonempty()
                 }),
@@ -23,12 +27,13 @@ export async function CreatePost (request: FastifyRequest, reply:FastifyReply){
                 }).required(),
             })
            
-              const {image, title, body, idUser} = multiparformSchema.parse(request.body)
+              const {id, image, title, body, idUser} = multiparformSchema.parse(request.body)
 
               const { filename, _buf } = image
               const { value: titleValue } = title
               const { value: bodyValue } = body
               const { value: idUserValue } = idUser
+              const { value: idValue } = id
 
             const fileNameFormated = `${randomUUID()} - ${filename}`;
 
@@ -40,16 +45,17 @@ export async function CreatePost (request: FastifyRequest, reply:FastifyReply){
               }
             })
 
-            const createPostUseCase = await makeCreatePost()
+            const createPostUseCase = await makeUpdatePost()
             
             const post = await createPostUseCase.execute({
+                id:idValue,
                 body: bodyValue,
                 idUser: idUserValue,
                 title: titleValue,
                 image: fileNameFormated
             })
 
-            return reply.status(201).send(post)
+            return reply.status(200).send(post)
             
           } catch (error) {
             if(error instanceof  ResourceNotFoundError){

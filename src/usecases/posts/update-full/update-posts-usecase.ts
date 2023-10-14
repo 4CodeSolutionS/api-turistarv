@@ -44,7 +44,6 @@ export class UpdatePostUseCase{
         // atualizar post
         const post = await this.postsRepository.updateById({
             id,
-            idUser,
             title,
             body,
             image
