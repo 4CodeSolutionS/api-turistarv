@@ -5,8 +5,10 @@ import { hash } from "bcrypt";
 import { randomUUID } from "crypto";
 import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
 import { UpdatePostUseCase } from "./update-posts-usecase";
+import { InMemoryStorageProvider } from "@/providers/StorageProvider/in-memory/in-memory-storage-provider";
 
 let postInMemoryRepository: InMemoryPostRepository;
+let storageProviderInMemory: InMemoryStorageProvider;
 let usersRepositoryInMemory: InMemoryUsersRepository;
 let stu: UpdatePostUseCase;
 
@@ -14,9 +16,11 @@ describe("Update post (unit)", () => {
     beforeEach(async () => {
         postInMemoryRepository = new InMemoryPostRepository()
         usersRepositoryInMemory = new InMemoryUsersRepository()
+        storageProviderInMemory = new InMemoryStorageProvider()
         stu = new UpdatePostUseCase(
             postInMemoryRepository,
             usersRepositoryInMemory,
+            storageProviderInMemory
         )
 
         await usersRepositoryInMemory.create({
@@ -43,15 +47,18 @@ describe("Update post (unit)", () => {
             idUser: "bd3234d7-21e6-4e1d-8129-8b823c4d331a",
             title: "title updated",
             body: "body updated",
-            image: "nestjs.png 2"
+            image: "nestjs.png 2",
+            active: true,
         });
 
         expect(updatePost).toEqual(
             expect.objectContaining({
+                id: "4c6f1fd5-259c-444b-a229-3357e8944e68",
                 idUser: "bd3234d7-21e6-4e1d-8129-8b823c4d331a",
                 title: "title updated",
                 body: "body updated",
-                image: "nestjs.png 2"
+                image: "nestjs.png 2",
+                active: true,
             })
         )
     });
@@ -65,6 +72,7 @@ describe("Update post (unit)", () => {
             title: "title",
             body: "body",
             image: "nestjs.png",
+            active: true,
         })).rejects.toEqual(new ResourceNotFoundError)
     });
 
@@ -75,6 +83,7 @@ describe("Update post (unit)", () => {
             title: "title",
             body: "body",
             image: "nestjs.png",
+            active: true,
         })).rejects.toEqual(new ResourceNotFoundError)
     });
 })

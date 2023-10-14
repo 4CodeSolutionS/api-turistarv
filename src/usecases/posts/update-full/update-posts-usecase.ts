@@ -10,12 +10,14 @@ interface IRequestUpdatePost {
     title: string
     body: string
     image: string
+    active: boolean
 }
 
 export class UpdatePostUseCase{
     constructor(
        private postsRepository: IPostsRepository,
        private usersRepository: IUsersRepository,
+       private storageProvider:  IStorageProvider
     ) {}
 
     async execute({
@@ -23,7 +25,8 @@ export class UpdatePostUseCase{
       body,
       title,
       idUser,
-      image
+      image,
+      active
     }:IRequestUpdatePost):Promise<Post>{
         // encontrar um post pelo id
         const findPost = await this.postsRepository.findById(id)
@@ -40,13 +43,17 @@ export class UpdatePostUseCase{
         if(!findUserExist){
             throw new ResourceNotFoundError()
         }
-
+         // env.FOLDER_TMP
+         const pathFolder = './src/tmp/posts'
+         // salvar imagem no storage
+         const fileName = await this.storageProvider.uploadFile(image, pathFolder, 'turistarv')
         // atualizar post
         const post = await this.postsRepository.updateById({
             id,
             title,
             body,
-            image
+            image: fileName as string,
+            active
         })
 
         // retornar post atualizado

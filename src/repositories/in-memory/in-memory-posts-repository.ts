@@ -40,7 +40,6 @@ export class InMemoryPostRepository implements IPostsRepository{
         id,
         body,
         title,
-        idUser,
         image,
         active,
     }: Prisma.PostUncheckedUpdateInput){
@@ -48,7 +47,6 @@ export class InMemoryPostRepository implements IPostsRepository{
 
         this.posts[postIndex].body = body as string;
         this.posts[postIndex].title = title as string;
-        this.posts[postIndex].idUser = idUser as string;
         this.posts[postIndex].image = image as string;
         this.posts[postIndex].active = active as boolean;
 

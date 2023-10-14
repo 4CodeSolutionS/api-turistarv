@@ -21,19 +21,23 @@ export async function UpdatePost (request: FastifyRequest, reply:FastifyReply){
                 body: z.object({
                   value: z.string().nonempty()
                 }),
+                active: z.object({
+                  value: z.boolean()
+                }),
                 image: z.object({
                   filename: z.string().nonempty(),
                   _buf: z.any()
                 }).required(),
             })
            
-              const {id, image, title, body, idUser} = multiparformSchema.parse(request.body)
+              const {id, image, title, body, idUser, active} = multiparformSchema.parse(request.body)
 
               const { filename, _buf } = image
               const { value: titleValue } = title
               const { value: bodyValue } = body
               const { value: idUserValue } = idUser
               const { value: idValue } = id
+              const { value: activeValue } = active
 
             const fileNameFormated = `${randomUUID()} - ${filename}`;
 
@@ -52,7 +56,8 @@ export async function UpdatePost (request: FastifyRequest, reply:FastifyReply){
                 body: bodyValue,
                 idUser: idUserValue,
                 title: titleValue,
-                image: fileNameFormated
+                image: fileNameFormated,
+                active: activeValue
             })
 
             return reply.status(200).send(post)

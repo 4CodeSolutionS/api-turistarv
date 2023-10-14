@@ -67,11 +67,14 @@ describe('Update Post (e2e)', ()=>{
             title: {
                 value: "primeiro post atualizado"
             },
+            active:{
+              value: true  
+            },
             body: {
                 value: "descrição do post atualizado"
             },
             image: {
-                filename: "name1.jpg",
+                filename: "nestjs.jpg",
                 _buf: "arquivo1.buffer"
             }
         })
@@ -133,6 +136,9 @@ describe('Update Post (e2e)', ()=>{
             title: {
                 value: "primeiro post atualizado"
             },
+            active:{
+                value: true  
+              },
             body: {
                 value: "descrição do post atualizado"
             },
@@ -191,13 +197,16 @@ describe('Update Post (e2e)', ()=>{
         .put(`/api/posts`)
         .send({
             id: {
-                value: id
+                value: randomUUID()
             },
             idUser: {
-                value: randomUUID()
+                value: user.id
             },
             title: {
                 value: "primeiro post atualizado"
+            },
+            active:{
+                value: true  
             },
             body: {
                 value: "descrição do post atualizado"
