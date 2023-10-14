@@ -22,7 +22,7 @@ export async function UpdatePost (request: FastifyRequest, reply:FastifyReply){
                   value: z.string().nonempty()
                 }),
                 active: z.object({
-                  value: z.boolean()
+                  value: z.coerce.boolean()
                 }),
                 image: z.object({
                   filename: z.string().nonempty(),
