@@ -39,11 +39,8 @@ describe("Logout (unit)", () => {
         // criar usuário
         await usersRepositoryInMemory.create({
             id: "bd3234d7-21e6-4e1d-8129-8b823c4d331a",
-            cpf: "524.658.490-93",
-            dateBirth: '2023-10-03',
             email: 'email1@test.com',
             name: 'Kaio Moreira',
-            phone: '77-77777-7777',
             password: await hash('123456', 8),
         }); 
 

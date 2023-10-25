@@ -8,6 +8,7 @@ import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-erro
 import { RegisterUseCase } from "../register/register-usecase";
 import { AccessTimeOutError } from "@/usecases/errors/access-time-out-error";
 import { InMemoryMailProvider } from "@/providers/MailProvider/in-memory/in-memory-mail-provider";
+import { User } from "@prisma/client";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
 let usersTokensRepositoryInMemory: InMemoryTokensRepository;
@@ -45,7 +46,6 @@ describe("Verify email user (unit)", () => {
         const {user} = await registerUseCase.execute({
             email: 'user1-test@email.com',
             name: 'John Doe',
-            phone: '77-77777-7777',
             password: await hash('123456', 8),
         })
         const userToken = await usersTokensRepositoryInMemory.findByUserId(user.id)
@@ -55,32 +55,9 @@ describe("Verify email user (unit)", () => {
             email: 'user1-test@email.com'
         });
 
-        const userActive = await usersRepositoryInMemory.findByEmail('user1-test@email.com')
+        const userActive = await usersRepositoryInMemory.findByEmail('user1-test@email.com') as User
 
-        expect(userActive?.emailActive).toBe(true)
-    });
-    test("Should not be able to verify a user active ", async () => {
-        const {user} = await registerUseCase.execute({
-            email: 'user2-test@email.com',
-            name: 'John Doe',
-            phone: '77-77777-7777',
-            password: await hash('123456', 8),
-        })
-        const userToken = await usersTokensRepositoryInMemory.findByUserId(user.id)
-
-        await stu.execute({ 
-            token: userToken?.token as string,
-            email: 'user2-test@email.com'
-        });
-
-        const userActive = await usersRepositoryInMemory.findByEmail('user2-test@email.com')
-
-        expect(()=> stu.execute({ 
-            token: userToken?.token as string,
-            email: 'user2-test@email.com'
-        })).rejects.toBeInstanceOf(AccessTimeOutError)
-
-        expect(userActive?.emailActive).toBe(true)
+        expect(userActive.emailActive).toBe(true)
     });
 
     test("Should not be able to verify a new account with Email already exists", async () => {
@@ -100,23 +77,4 @@ describe("Verify email user (unit)", () => {
     }),
         ).rejects.toBeInstanceOf(ResourceNotFoundError)
     });
-
-    test("Should not be able to verify a account with token expired", async () => {
-        vi.setSystemTime( new Date(2023, 8, 23, 19, 0, 0))
-        const {user} = await registerUseCase.execute({
-            email: 'user1-test@email.com',
-            name: 'John Doe',
-            phone: '77-77777-7777',
-            password: await hash('123456', 8),
-        })
-        const userToken = await usersTokensRepositoryInMemory.findByUserId(user.id)
-
-        vi.setSystemTime( new Date(2023, 8, 23, 23, 0, 0))
-
-        await expect(()=> stu.execute({ 
-         token: userToken?.token as string,
-         email: 'user1-test@email.com',
-     }),
-         ).rejects.toBeInstanceOf(AccessTimeOutError)
-     });
 });

@@ -1,3 +1,4 @@
+import { AccessTimeOutError } from '@/usecases/errors/access-time-out-error'
 import { ResourceNotFoundError } from '@/usecases/errors/resource-not-found-error'
 import { makeSendForgotPassword } from '@/usecases/factories/users/make-send-forgot-password-usecase'
 import { FastifyReply, FastifyRequest } from 'fastify'
@@ -6,7 +7,7 @@ import { z } from 'zod'
 export async function SendForgotPassword (request: FastifyRequest, reply:FastifyReply){
         try {
             const userSchema = z.object({
-              email: z.string().email().nonempty(),
+              email: z.string().email(),
             })
 
             const {
@@ -25,8 +26,6 @@ export async function SendForgotPassword (request: FastifyRequest, reply:Fastify
             if(error instanceof ResourceNotFoundError){
               return reply.status(404).send({ message: error.message})
             }
-
-            throw error
           }
 }
 

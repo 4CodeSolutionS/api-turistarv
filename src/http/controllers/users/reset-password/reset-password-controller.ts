@@ -37,7 +37,6 @@ export async function ResetPassword (request: FastifyRequest, reply:FastifyReply
             if(error instanceof AccessTimeOutError){
               return reply.status(401).send({ message: error.message})
             }
-            throw error
           }
 }
 

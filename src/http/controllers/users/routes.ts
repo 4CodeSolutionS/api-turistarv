@@ -12,6 +12,7 @@ import { LogoutUser } from './logout/logout-user-controller'
 import { verifyUserRole } from '@/http/middlewares/verify-user-role'
 import { AccessAdminUser } from './access-admin/access-admin-users-controller'
 import { EmailExists } from './email-exists/email-exists-controller'
+import { RefreshToken } from './refresh-token/refresh-token-users-controller'
 export async function usersRoutes(fastifyApp: FastifyInstance) {
     // register user
     fastifyApp.post('/', RegisterUser)
@@ -21,6 +22,9 @@ export async function usersRoutes(fastifyApp: FastifyInstance) {
 
     // email exists user
     fastifyApp.get('/email-exists', EmailExists)
+
+    // refresh token
+    fastifyApp.post('/refresh-token', RefreshToken)
 
     // logout user
     fastifyApp.post('/logout', {onRequest: [verifyTokenJWT]}, LogoutUser)

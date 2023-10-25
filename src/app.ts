@@ -11,6 +11,7 @@ import { leadsRoutes } from "./http/controllers/leads/routes";
 import { keysRoutes } from "./http/controllers/keys/route";
 import { postsRoutes } from "./http/controllers/posts/router";
 import urlEncodede from '@fastify/formbody'
+import { addressRoutes } from "./http/controllers/address/router";
 
 export const fastifyApp = fastify()
 
@@ -23,8 +24,6 @@ fastifyApp.register(fastifyCors, {
 fastifyApp.register(fastifyMultipart, {attachFieldsToBody: true})
 
 fastifyApp.register(urlEncodede)
-
-// fastifyApp.register(multer.contentParser)
 
 fastifyApp.register(usersRoutes,{
     prefix: 'api/users'
@@ -42,6 +41,9 @@ fastifyApp.register(postsRoutes,{
   prefix: 'api/posts'
 })
 
+fastifyApp.register(addressRoutes,{
+  prefix: 'api/address'
+})
   
 fastifyApp.setErrorHandler((error:FastifyError, _request:FastifyRequest, reply: FastifyReply)=>{
   if(error instanceof ZodError){

@@ -75,21 +75,20 @@ model Post {
 }
 
 model Address {
-  id         String @id @unique @default(uuid())
-  street     String
-  num        String
-  district   String
-  city       String
-  state      String
-  country    String
-  zipCode    String
-  complement String
-  reference  String
-
-  user           User          @relation(fields: [idUser], references: [id])
-  idUser         String
+  id             String        @id @unique @default(uuid())
+  user           User?         @relation(fields: [idUser], references: [id])
+  idUser         String?
   Announcement   Announcement? @relation(fields: [idAnnouncement], references: [id])
   idAnnouncement String?
+  street         String
+  num            Decimal
+  district       String
+  city           String
+  state          String
+  country        String
+  zipCode        Decimal
+  complement     String?
+  reference      String?
 
   @@map("addresses")
 }

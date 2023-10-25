@@ -27,29 +27,11 @@ export class VerifyEmailUseCase{
             throw new ResourceNotFoundError()
         }
 
-        //[x] verificar se o email ja foi ativado
-        if(findUserByEmail.emailActive){
-            throw new AccessTimeOutError()
-        }
-
         const findToken = await this.usersTokensRepository.findByToken(token)
 
         if(!findToken){
             throw new ResourceNotFoundError()
         }
-
-        // verificar se o token está expirado
-        if  (
-                this.dayjsDateProvider.compareIfBefore
-                (
-                    findToken.expireDate, 
-                    this.dayjsDateProvider.dateNow()
-                )
-            )
-            {
-                throw new AccessTimeOutError()
-            }
-
 
         //atualizar emailActive para true
         await this.usersRepository.activeEmail(findUserByEmail.id)

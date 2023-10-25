@@ -33,8 +33,8 @@ export class SendForgotPasswordUseCase{
         }
         // pegar caminho do arquivo handlebars forgot-password.hbs
         let pathTemplate = env.NODE_ENV === "development" ? 
-        './views/emails/verify-email.hbs':
-        './build/views/emails/verify-email.hbs' 
+        './views/emails/forgot-password.hbs':
+        './build/views/emails/forgot-password.hbs' 
 
         // criar token com uuid
         const token = randomUUID()
@@ -50,10 +50,7 @@ export class SendForgotPasswordUseCase{
         })
 
         // criar o link para redeinir senha
-        const link = env.NODE_ENV === "development" ?
-        `${env.APP_URL_DEVLOPMENT}/users/reset-password?token=${token}`:
-        `${env.APP_URL_PRODUCTION}/users/reset-password?token=${token}`
-
+        const link = `${env.APP_URL}/reset-password?token=${token}`
         // enviar email com link de recuperação de senha
         await this.sendMailProvider.sendEmail(
             findUserByEmail.email, 

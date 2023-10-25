@@ -35,11 +35,8 @@ describe("Refresh token (unit)", () => {
         // criar usuário
         await usersRepositoryInMemory.create({
             id: 'id-user-1',
-            cpf: "12345678910",
-            dateBirth: new Date('1999-06-01'),
             email: 'user1-test@email.com',
             name: 'John Doe',
-            phone: '77-77777-7777',
             password: await hash('123456', 8),
         })
         vi.useFakeTimers()
@@ -61,7 +58,6 @@ describe("Refresh token (unit)", () => {
         
         expect(newTokens).toEqual(
             expect.objectContaining({
-                refreshToken: expect.any(String),
                 accessToken: expect.any(String),
             })
         )

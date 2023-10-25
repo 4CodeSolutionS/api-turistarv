@@ -1,4 +1,4 @@
-import { InvalidAccessTokenError } from '@/usecases/errors/invalid-access-token-error'
+import { InvalidAccessTokenError } from '@/usecases/address/update-full/errors/invalid-access-token-error'
 import { ResourceNotFoundError } from '@/usecases/errors/resource-not-found-error'
 import { makeLogoutUser } from '@/usecases/factories/users/make-logout-user-usecase'
 import { FastifyReply, FastifyRequest } from 'fastify'

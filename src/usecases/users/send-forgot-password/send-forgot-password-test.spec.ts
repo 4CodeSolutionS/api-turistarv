@@ -6,6 +6,7 @@ import { InMemoryTokensRepository } from "@/repositories/in-memory/in-memory-tok
 import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
 import { SendForgotPasswordUseCase } from "./send-forgot-password-usecase";
 import { InMemoryMailProvider } from "@/providers/MailProvider/in-memory/in-memory-mail-provider";
+import { Token } from "@prisma/client";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
 let usersTokensRepositoryInMemory: InMemoryTokensRepository;
@@ -28,11 +29,8 @@ describe("Send forgot password user (unit)", () => {
 
         await usersRepositoryInMemory.create({
             id: 'id-user-1',
-            cpf: "12345678910",
-            dateBirth: new Date('1999-06-01'),
             email: 'user1-test@email.com',
             name: 'John Doe',
-            phone: '77-77777-7777',
             password: await hash('123456', 8),
         })
     });
@@ -42,9 +40,9 @@ describe("Send forgot password user (unit)", () => {
             email: 'user1-test@email.com'
         });
 
-        const userToken = await usersTokensRepositoryInMemory.findByUserId('id-user-1')
+        const userToken = await usersTokensRepositoryInMemory.findByUserId('id-user-1') as Token
 
-        expect(userToken?.token).toEqual(expect.any(String))
+        expect(userToken.token).toEqual(expect.any(String))
 
         
         // confirmar se email foi enviado

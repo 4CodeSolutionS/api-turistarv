@@ -1,7 +1,5 @@
 import 'dotenv/config'
 import { ITokensRepository } from "@/repositories/interface-tokens-repository";
-import { sign, verify } from "jsonwebtoken";
-import { env } from "@/env";
 import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
 import { IDateProvider } from '@/providers/DateProvider/interface-date-provider';
 import { ICacheProvider } from '@/providers/CacheProvider/interface-cache';

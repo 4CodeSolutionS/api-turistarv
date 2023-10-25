@@ -7,8 +7,8 @@ import { z } from 'zod'
 export async function VerifyEmail (request: FastifyRequest, reply:FastifyReply){
         try {
             const userSchema = z.object({
-              email: z.string().email().nonempty(),
-              token: z.string().nonempty(),
+              email: z.string().email(),
+              token: z.string(),
             })
 
             const {
@@ -32,7 +32,6 @@ export async function VerifyEmail (request: FastifyRequest, reply:FastifyReply){
             if(error instanceof AccessTimeOutError){
               return reply.status(401).send({ message: error.message})
             }
-            throw error
           }
 }
 
