@@ -35,7 +35,7 @@ describe("Create address (unit)", () => {
             idUser: '2c72f329-8ba9-4335-8491-e8af5e9e19a0',
             city: 'city-user-2',
             country: 'country-user-2',
-            district: 'district-user-2',
+            district: 'district-user-22',
             num: 2,
             state: 'state-user-2',
             street: 'street-user-2',
