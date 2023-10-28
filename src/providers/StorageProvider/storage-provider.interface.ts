@@ -1,3 +1,3 @@
 export interface IStorageProvider {
-    uploadFile(fileName: string, pathFolder: string, folderStorage: 'turistarv'): Promise<string | undefined>;
+    uploadFile(fileName: string, pathFolder: string, folderStorage: 'turistarv' | 'announcements'): Promise<string | undefined>;
 }

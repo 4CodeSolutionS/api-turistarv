@@ -19,7 +19,9 @@ const envSchema = z.object({
     FIREBASE_CLIENT_EMAIL: z.string().email().nonempty(),
     FIREBASE_PRIVATE_KEY: z.string().nonempty(),
     FIREBASE_BUCKET: z.string().nonempty(),
-    FOLDER_TMP: z.string().nonempty(),
+    FOLDER_TMP_DEVELOPMENT: z.string().nonempty(),
+    FOLDER_TMP_PRODUCTION: z.string().nonempty(),
+    SENTRY_DSN: z.string().nonempty(),
 })
 
 const _env = envSchema.safeParse(process.env)

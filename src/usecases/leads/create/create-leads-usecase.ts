@@ -1,5 +1,5 @@
 import { ILeadRepository } from "@/repositories/interface-leads-repository";
-import { LeadAlreadyExistsError } from "@/usecases/errors/lead-already-exists-error";
+import { AppError } from "@/usecases/errors/app-error";
 import { Lead } from "@prisma/client";
 
 interface IRequestCreateLead {
@@ -23,7 +23,7 @@ export class CreateLeadUseCase{
 
         //[x] verificar se lead ja existe
         if(findLeadExists){
-            throw new LeadAlreadyExistsError();
+            throw new AppError('Lead já cadastrado', 409)
         }
 
         //[x] criar lead

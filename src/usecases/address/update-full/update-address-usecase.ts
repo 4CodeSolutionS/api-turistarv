@@ -1,6 +1,6 @@
 import { IAddressesRepository } from '@/repositories/interface-addresses-repository';
 import { IUsersRepository } from '@/repositories/interface-users-repository';
-import { ResourceNotFoundError } from '@/usecases/errors/resource-not-found-error';
+import { AppError } from '@/usecases/errors/app-error';
 
 
 interface IResquestUpdateAddress{
@@ -46,7 +46,7 @@ export class UpdateAddressByIdUseCase {
 
         // validar se usuario existe
         if(!findUserExist){
-            throw new ResourceNotFoundError()
+            throw new AppError('Usuário não encontrado', 404)
         }
     }
     
@@ -57,7 +57,7 @@ export class UpdateAddressByIdUseCase {
     const checkAddressExists = await this.addressRepository.findById(id);
 
     if (!checkAddressExists) {
-      throw new ResourceNotFoundError();
+      throw new AppError("Endereço não encontrado", 404);
     }
 
     const address = await this.addressRepository.updateById({

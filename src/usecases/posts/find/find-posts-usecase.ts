@@ -1,5 +1,5 @@
 import { IPostsRepository } from "@/repositories/interface-posts-repository";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
+import { AppError } from "@/usecases/errors/app-error";
 import { Post } from "@prisma/client";
 
 interface IRequestFindPost {
@@ -19,7 +19,7 @@ export class FindPostUseCase{
 
         // validar se post existe
         if(!findPost){
-            throw new ResourceNotFoundError()
+            throw new AppError('Post não encontrado', 404)
         }
 
         // retornar post

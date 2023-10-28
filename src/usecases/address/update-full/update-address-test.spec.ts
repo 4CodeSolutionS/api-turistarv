@@ -3,7 +3,7 @@ import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-user
 import { hash } from "bcrypt";
 import { InMemoryAddressesRepository } from "@/repositories/in-memory/in-memory-addresses-repository";
 import { UpdateAddressByIdUseCase } from "./update-address-usecase";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
+import { AppError } from "@/usecases/errors/app-error";
 
 let addressRepositoryInMemory: InMemoryAddressesRepository;
 let usersRepositoryInMemory: InMemoryUsersRepository;
@@ -88,7 +88,7 @@ describe("Update address (unit)", () => {
             zipCode: 2,
             complement: 'complement-user-2',
             reference: 'reference-user-2',
-        })).rejects.toBeInstanceOf(ResourceNotFoundError)
+        })).rejects.toEqual(new AppError('Endereço não encontrado', 404));
     });
 
     test("Should not be able to update a address with idUser invalid", async () => {
@@ -104,6 +104,6 @@ describe("Update address (unit)", () => {
             zipCode: 2,
             complement: 'complement-user-2',
             reference: 'reference-user-2',
-        })).rejects.toBeInstanceOf(ResourceNotFoundError)
+        })).rejects.toEqual(new AppError('Usuário não encontrado', 404));
     });
 });

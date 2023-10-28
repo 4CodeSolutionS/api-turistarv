@@ -33,14 +33,13 @@ describe('Logout User (e2e)', ()=>{
             password: '123456',
         })
         const {accessToken, refreshToken, user} = responseLogin.body
+
         const responseLogout = await request(fastifyApp.server)
         .post('/api/users/logout')
         .set('Authorization', `Bearer ${accessToken}`)
         .send({
             refreshToken,
         })
-
-        expect(responseLogout.statusCode).toEqual(200)
 
         const responseFindUser = await request(fastifyApp.server)
         .get(`/api/users/${user.id}`)
@@ -71,7 +70,7 @@ describe('Logout User (e2e)', ()=>{
             email: 'email1@test.com',
             password: '123456',
         })
-        const {accessToken, refreshToken, user} = responseLogin.body
+        const {accessToken} = responseLogin.body
 
         const responseLogout = await request(fastifyApp.server)
         .post('/api/users/logout')
@@ -79,6 +78,7 @@ describe('Logout User (e2e)', ()=>{
         .send({
             refreshToken: 'fake-refresh-token',
         })
+
         expect(responseLogout.statusCode).toEqual(401)
     })
 

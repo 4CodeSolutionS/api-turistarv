@@ -22,17 +22,17 @@ export class InMemoryAddressesRepository implements IAddressesRepository{
     }: Prisma.AddressUncheckedCreateInput){
         const address = {
             id: id ? id : randomUUID(),
-            street,
-            num: new Prisma.Decimal(num as number),
-            district,
-            city,
-            state,
-            country,
-            zipCode: new Prisma.Decimal(zipCode as number),
-            complement: complement ? complement : null,
-            reference: reference ? reference : null,
             idUser: idUser ? idUser : null,
             idAnnouncement: idAnnouncement ? idAnnouncement : null,
+            street: street ? street : null,
+            num: num ? new Prisma.Decimal(num as number) : null,
+            district: district ? district : null,
+            city: city ? city : null,
+            state,
+            country: country ? country : null,
+            zipCode: zipCode ? new Prisma.Decimal(zipCode as number) : null,
+            complement: complement ? complement : null,
+            reference: reference ? reference : null,
         }
 
         this.adresses.push(address);

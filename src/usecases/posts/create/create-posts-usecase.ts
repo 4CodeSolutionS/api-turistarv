@@ -1,7 +1,8 @@
+import { env } from "@/env";
 import { IStorageProvider } from "@/providers/StorageProvider/storage-provider.interface";
 import { IPostsRepository } from "@/repositories/interface-posts-repository";
 import { IUsersRepository } from "@/repositories/interface-users-repository";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
+import { AppError } from "@/usecases/errors/app-error";
 import { Post } from "@prisma/client";
 
 interface IRequestCreatePost {
@@ -29,11 +30,11 @@ export class CreatePostUseCase{
 
         // validar se usuario existe
         if(!findUserExist){
-            throw new ResourceNotFoundError()
+            throw new AppError('Usuário não encontrado', 404)
         }
+        
+        const pathFolder = env.NODE_ENV === "production" ? `${env.FOLDER_TMP_PRODUCTION}/posts` : `${env.FOLDER_TMP_DEVELOPMENT}/posts`
 
-        // env.FOLDER_TMP
-        const pathFolder = './src/tmp/posts'
         // salvar imagem no storage
         const fileName = await this.storageProvider.uploadFile(image, pathFolder, 'turistarv')
         //[x] criar post

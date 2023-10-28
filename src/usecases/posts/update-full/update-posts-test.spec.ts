@@ -3,9 +3,9 @@ import { InMemoryPostRepository } from "@/repositories/in-memory/in-memory-posts
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import { hash } from "bcrypt";
 import { randomUUID } from "crypto";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
 import { UpdatePostUseCase } from "./update-posts-usecase";
 import { InMemoryStorageProvider } from "@/providers/StorageProvider/in-memory/in-memory-storage-provider";
+import { AppError } from "@/usecases/errors/app-error";
 
 let postInMemoryRepository: InMemoryPostRepository;
 let storageProviderInMemory: InMemoryStorageProvider;
@@ -73,7 +73,7 @@ describe("Update post (unit)", () => {
             body: "body",
             image: "nestjs.png",
             active: true,
-        })).rejects.toEqual(new ResourceNotFoundError)
+        })).rejects.toEqual(new AppError('Usuário não encontrado', 404))
     });
 
     test("Should not be able to update a post with invalid id", async () => {
@@ -84,6 +84,6 @@ describe("Update post (unit)", () => {
             body: "body",
             image: "nestjs.png",
             active: true,
-        })).rejects.toEqual(new ResourceNotFoundError)
+        })).rejects.toEqual(new AppError('Post não encontrado', 404))
     });
 })

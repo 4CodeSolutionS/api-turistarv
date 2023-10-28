@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { InMemoryPostRepository } from "@/repositories/in-memory/in-memory-posts-repository";
 import { randomUUID } from "crypto";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
 import { ListPostUseCase } from "./list-posts-usecase";
 
 let postInMemoryRepository: InMemoryPostRepository;

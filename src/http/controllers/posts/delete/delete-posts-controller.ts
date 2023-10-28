@@ -1,4 +1,3 @@
-import { ResourceNotFoundError } from '@/usecases/errors/resource-not-found-error'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import { makeDeletePost } from '@/usecases/factories/posts/make-delete-posts-usecase'
@@ -20,9 +19,6 @@ export async function DeletePost (request: FastifyRequest, reply:FastifyReply){
             return reply.status(200).send(post)
             
           } catch (error) {
-            if(error instanceof  ResourceNotFoundError){
-              return reply.status(404).send({ message: error.message})
-            }
             throw error
           }
 }

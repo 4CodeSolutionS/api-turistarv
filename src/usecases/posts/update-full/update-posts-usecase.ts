@@ -1,7 +1,8 @@
+import { env } from "@/env";
 import { IStorageProvider } from "@/providers/StorageProvider/storage-provider.interface";
 import { IPostsRepository } from "@/repositories/interface-posts-repository";
 import { IUsersRepository } from "@/repositories/interface-users-repository";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
+import { AppError } from "@/usecases/errors/app-error";
 import { Post } from "@prisma/client";
 
 interface IRequestUpdatePost {
@@ -33,7 +34,7 @@ export class UpdatePostUseCase{
 
         // validar se post existe
         if(!findPost){
-            throw new ResourceNotFoundError()
+            throw new AppError('Post não encontrado', 404)   
         }
         
         // encontrar usuario pelo id
@@ -41,11 +42,13 @@ export class UpdatePostUseCase{
 
         // validar se usuario existe
         if(!findUserExist){
-            throw new ResourceNotFoundError()
+            throw new AppError('Usuário não encontrado', 404)    
         }
-         // env.FOLDER_TMP
-         const pathFolder = './src/tmp/posts'
-         // salvar imagem no storage
+
+        // env.FOLDER_TMP
+        const pathFolder = env.NODE_ENV === "production" ? `${env.FOLDER_TMP_PRODUCTION}/posts` : `${env.FOLDER_TMP_DEVELOPMENT}/posts`
+        
+        // salvar imagem no storage
          const fileName = await this.storageProvider.uploadFile(image, pathFolder, 'turistarv')
         // atualizar post
         const post = await this.postsRepository.updateById({

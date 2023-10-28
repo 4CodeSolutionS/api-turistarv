@@ -76,10 +76,6 @@ export class InMemoryUsersRepository implements IUsersRepository{
         phone,
         emailActive,
         role,
-        address,
-        leads,
-        posts,
-        tokens,
     }: Prisma.UserUncheckedCreateInput) {
         const user = {
             id: id ? id : randomUUID(),

@@ -1,9 +1,8 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
-import { InMemoryMailProvider } from "@/providers/MailProvider/in-memory/in-memory-mail-provider";
 import { FindUserUseCase } from "./find-user-usecase";
 import { hash } from "bcrypt";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
+import { AppError } from "@/usecases/errors/app-error";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
 let stu: FindUserUseCase;
@@ -42,7 +41,7 @@ describe("Find user (unit)", () => {
         await expect(()=> stu.execute({
             id: 'id-faker-user-2'
         }),
-        ).rejects.toBeInstanceOf(ResourceNotFoundError)
+        ).rejects.toEqual(new AppError('Usuário não encontrado', 404))
     });
 
 })

@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import { hash } from "bcrypt";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
 import { DeleteUserUseCase } from "./delete-user-usecase";
 import { User } from "@prisma/client";
+import { AppError } from "@/usecases/errors/app-error";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
 let stu: DeleteUserUseCase;
@@ -41,7 +41,7 @@ describe("Delete user (unit)", () => {
         await expect(()=> stu.execute({
             id: 'id-faker-user-2'
         }),
-        ).rejects.toBeInstanceOf(ResourceNotFoundError)
+        ).rejects.toEqual(new AppError('Usuário não encontrado', 404))
     });
 
 })

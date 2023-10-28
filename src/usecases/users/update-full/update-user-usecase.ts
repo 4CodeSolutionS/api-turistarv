@@ -1,9 +1,7 @@
 import { IUsersRepository } from "@/repositories/interface-users-repository";
 import 'dotenv/config'
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
 import { User } from "@prisma/client";
-import { CPFAlreadyExistsError } from "@/usecases/errors/cpf-already-exists-error";
-import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exist-error";
+import { AppError } from "@/usecases/errors/app-error";
 
 interface IRequestUpdateUser {
     id: string,
@@ -32,7 +30,7 @@ export class UpdateUserUseCase{
     }:IRequestUpdateUser):Promise<IResponseUpdateUser>{
         const findUserExists = await this.usersRepository.getUserSecurity(id)
         if(!findUserExists){
-            throw new ResourceNotFoundError()
+            throw new AppError('Usuário não encontrado', 404)
         }
 
         
@@ -40,7 +38,7 @@ export class UpdateUserUseCase{
             const findUserByCPF = await this.usersRepository.findByCPF(cpf)
         //[x] verificar se cpf ja existe
             if(findUserByCPF){
-                throw new CPFAlreadyExistsError()
+                throw new AppError('CPF já cadastrado', 409)
             }
 
         }
@@ -48,7 +46,7 @@ export class UpdateUserUseCase{
             const findUserByPassport = await this.usersRepository.findByPassport(passport)
             //[x] verificar se passport ja existe
             if(findUserByPassport){
-                throw new PassportAlreadyExistsError()
+                throw new AppError('Passaporte já cadastrado', 409)
             }
         }
        const userUpdated = await this.usersRepository.update({

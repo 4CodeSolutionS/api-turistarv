@@ -1,25 +1,42 @@
 import fastify, { FastifyError, FastifyReply, FastifyRequest } from "fastify";
 import fastifyCors from '@fastify/cors'
 import "dotenv/config"
-// import multer from "fastify-multer";
 import fastifyMultipart from "@fastify/multipart";
 import { usersRoutes } from "./http/controllers/users/routes";
 import { ZodError } from "zod";
-import { env } from "./env";
-import { InvalidAccessTokenError } from "./usecases/errors/invalid-access-token-error";
+import { env } from "@/env";
 import { leadsRoutes } from "./http/controllers/leads/routes";
 import { keysRoutes } from "./http/controllers/keys/route";
 import { postsRoutes } from "./http/controllers/posts/router";
 import urlEncodede from '@fastify/formbody'
 import { addressRoutes } from "./http/controllers/address/router";
+import { announcementsRoutes } from "./http/controllers/announcements/routes";
+import Sentry from '@immobiliarelabs/fastify-sentry'
+import { AppError } from "./usecases/errors/app-error";
+import rateLimiter from '@fastify/rate-limit'
 
 export const fastifyApp = fastify()
+
+fastifyApp.register(Sentry, {
+  dsn: env.SENTRY_DSN,
+  environment: 'production',
+  setErrorHandler: false,
+  enableTracing: env.NODE_ENV === 'production' ? true : false,
+  release: '1.0.0',
+});
 
 fastifyApp.register(fastifyCors, {
   origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 })
+
+if(env.NODE_ENV === 'production'){
+  fastifyApp.register(rateLimiter, {
+    max: 10,
+    timeWindow: '10 second'
+  })
+}
 
 fastifyApp.register(fastifyMultipart, {attachFieldsToBody: true})
 
@@ -44,20 +61,32 @@ fastifyApp.register(postsRoutes,{
 fastifyApp.register(addressRoutes,{
   prefix: 'api/address'
 })
-  
-fastifyApp.setErrorHandler((error:FastifyError, _request:FastifyRequest, reply: FastifyReply)=>{
-  if(error instanceof ZodError){
-      return reply.status(400).send({message: 'Campo inválido', issues: error.format()})
-  }
-  if(error instanceof InvalidAccessTokenError){
-    return reply.status(401).send({ message: error.message})
+
+fastifyApp.register(announcementsRoutes,{
+  prefix: 'api/announcements'
+})
+
+fastifyApp.setErrorHandler((error:FastifyError,request:FastifyRequest, reply: FastifyReply)=>{
+  if(env.NODE_ENV !== 'production'){
+  }else{
+    if(error instanceof AppError){
+      fastifyApp.Sentry.captureException(Error(error.message))
+    }else{
+      fastifyApp.Sentry.captureException(error)
+    }
   }
 
-  if(env.NODE_ENV !== 'production'){
-      console.log(error)
-  }else{
-      // Aqui adicionar monitoramento de log em produção
-      // como Sentry/NewRelic/DataDog
+  if(error instanceof ZodError){
+    console.log(error)
+    return reply.status(400).send({message: 'Campo inválido', issues: error.format()})
+  }
+
+  if(error instanceof AppError){
+    return reply.status(error.statusCode).send({message: error.message})
+  }
+
+  if(error.statusCode === 429){
+    return reply.status(429).send({message: 'Muitas requisições para o mesmo IP'})
   }
 
   return reply.status(500).send({message: error.message})

@@ -1,6 +1,6 @@
 import { IAddressesRepository } from "@/repositories/interface-addresses-repository";
 import { IUsersRepository } from "@/repositories/interface-users-repository";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
+import { AppError } from "@/usecases/errors/app-error";
 import { Address } from "@prisma/client";
 
 interface IResquestCreateAddress{
@@ -43,7 +43,7 @@ export class CreateAddressUseCase {
 
         // validar se usuario existe
         if(!findUserExist){
-            throw new ResourceNotFoundError()
+            throw new AppError('Usuário não encontrado', 404)
         }
     }
 

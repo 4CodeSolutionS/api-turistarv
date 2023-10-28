@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { InMemoryLeadsRepository } from "@/repositories/in-memory/in-memory-leads-repository";
 import { CreateLeadUseCase } from "./create-leads-usecase";
-import { LeadAlreadyExistsError } from "@/usecases/errors/lead-already-exists-error";
+import { AppError } from "@/usecases/errors/app-error";
 
 let leadInMemoryRepository: InMemoryLeadsRepository;
 let stu: CreateLeadUseCase;
@@ -42,6 +42,6 @@ describe("Create lead (unit)", () => {
             name: 'name test',
             phone: '77777777777',
         
-        })).rejects.toBeInstanceOf(LeadAlreadyExistsError)
+        })).rejects.toEqual(new AppError('Lead já cadastrado', 409))
     });
 })

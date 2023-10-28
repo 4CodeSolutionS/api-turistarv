@@ -17,7 +17,6 @@ describe('Create Lead (e2e)', ()=>{
             name: 'Kaio Moreira',
             phone: '77777777777',
         })
-        console.log(responseCreateLead.error)
 
         expect(responseCreateLead.statusCode).toEqual(200)
     })

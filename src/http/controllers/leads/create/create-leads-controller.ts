@@ -1,4 +1,3 @@
-import { LeadAlreadyExistsError } from '@/usecases/errors/lead-already-exists-error'
 import { makeCreateLead } from '@/usecases/factories/leads/make-create-leads-usecase'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
@@ -27,9 +26,7 @@ export async function CreateLead (request: FastifyRequest, reply:FastifyReply){
             return reply.status(200).send(lead)
             
           } catch (error) {
-            if(error instanceof  LeadAlreadyExistsError){
-              return reply.status(409).send({ message: error.message})
-            }
+            
             throw error
           }
 }

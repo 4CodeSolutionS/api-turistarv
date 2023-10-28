@@ -3,9 +3,8 @@ import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-user
 import { hash } from "bcrypt";
 import { AccessAdminUsersUseCase } from "./access-admin-users-usecases";
 import { InMemoryKeysRepository } from "@/repositories/in-memory/in-memory-keys-repository";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
 import { randomUUID } from "crypto";
-import { KeyAlreadyActive } from "@/usecases/errors/key-already-active";
+import { AppError } from "@/usecases/errors/app-error";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
 let keysRepositoryInMemory: InMemoryKeysRepository
@@ -53,7 +52,7 @@ describe("Get Access Admin for user (unit)", () => {
         await expect(()=> stu.execute({
             idUser: '0c2db0f2-04b4-4ff3-9a4f-013b9a740f3a',
             key:'fake-key'
-        })).rejects.toBeInstanceOf(ResourceNotFoundError)
+        })).rejects.toEqual(new AppError('Chave não encontrada', 404))
     });
 
     test("Should not be able to change access admin user with idUser invalid", async () => {
@@ -62,7 +61,7 @@ describe("Get Access Admin for user (unit)", () => {
         await expect(()=> stu.execute({
             idUser: fakeId,
             key:'YTg3ZjEwOGUtZjg3Ni00ZmYwLTkzZDktN2FkOWM4NTIwMmI2YTg3ZjEwOGUtZjg3Ni00ZmYwLTkzZDktN2FkOWM4NTIwMmI2YTg3ZjEwOGUtZjg3Ni00ZmYwLTkzZDktN2FkOWM4NTIwMmI2YTg3ZjEwOGUtZjg3Ni00ZmYwLTkzZDktN2FkOWM4NTIwMmI2'
-        })).rejects.toBeInstanceOf(ResourceNotFoundError)
+        })).rejects.toEqual(new AppError('Usuário não encontrado', 404))
     });
 
     test("Should not be able to change access admin user with key already active", async () => {
@@ -74,7 +73,7 @@ describe("Get Access Admin for user (unit)", () => {
         await expect(() => stu.execute({
             idUser: '0c2db0f2-04b4-4ff3-9a4f-013b9a740f3a',
             key:'YTg3ZjEwOGUtZjg3Ni00ZmYwLTkzZDktN2FkOWM4NTIwMmI2YTg3ZjEwOGUtZjg3Ni00ZmYwLTkzZDktN2FkOWM4NTIwMmI2YTg3ZjEwOGUtZjg3Ni00ZmYwLTkzZDktN2FkOWM4NTIwMmI2YTg3ZjEwOGUtZjg3Ni00ZmYwLTkzZDktN2FkOWM4NTIwMmI2'
-        })).rejects.toBeInstanceOf(KeyAlreadyActive)
+        })).rejects.toEqual(new AppError('Chave já utilizada', 401))
     });
 
 })

@@ -1,12 +1,11 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { LeadAlreadyExistsError } from "@/usecases/errors/lead-already-exists-error";
 import { CreatePostUseCase } from "./create-posts-usecase";
 import { InMemoryPostRepository } from "@/repositories/in-memory/in-memory-posts-repository";
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import { hash } from "bcrypt";
 import { InMemoryStorageProvider } from "@/providers/StorageProvider/in-memory/in-memory-storage-provider";
 import { randomUUID } from "crypto";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
+import { AppError } from "@/usecases/errors/app-error";
 
 let postInMemoryRepository: InMemoryPostRepository;
 let usersRepositoryInMemory: InMemoryUsersRepository;
@@ -59,6 +58,6 @@ describe("Create post (unit)", () => {
             title: "title",
             body: "body",
             image: "nestjs.png"
-        })).rejects.toEqual(new ResourceNotFoundError)
+        })).rejects.toEqual(new AppError('Usuário não encontrado', 404))
     });
 })

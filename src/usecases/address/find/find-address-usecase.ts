@@ -1,5 +1,5 @@
 import { IAddressesRepository } from "@/repositories/interface-addresses-repository";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
+import { AppError } from "@/usecases/errors/app-error";
 import { Address } from "@prisma/client";
 
 interface IResquestFindAddress{
@@ -15,7 +15,7 @@ export class FindAddressByIdUseCase {
     const checkAddressExists = await this.addressRepository.findById(id);
 
     if (!checkAddressExists) {
-      throw new ResourceNotFoundError();
+      throw new AppError("Endereço não encontrado", 404);
     }
 
     return checkAddressExists;

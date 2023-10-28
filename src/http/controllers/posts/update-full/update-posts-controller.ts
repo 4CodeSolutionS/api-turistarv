@@ -1,10 +1,9 @@
-import { ResourceNotFoundError } from '@/usecases/errors/resource-not-found-error'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import * as fs from 'fs'
 import { randomUUID } from 'crypto'
-import { makeCreatePost } from '@/usecases/factories/posts/make-create-posts-usecase'
 import { makeUpdatePost } from '@/usecases/factories/posts/make-update-posts-usecase'
+import { env } from '@/env'
 
 export async function UpdatePost (request: FastifyRequest, reply:FastifyReply){
         try {
@@ -41,8 +40,10 @@ export async function UpdatePost (request: FastifyRequest, reply:FastifyReply){
 
             const fileNameFormated = `${randomUUID()} - ${filename}`;
 
+            const folderTmp = env.NODE_ENV === 'production' ? env.FOLDER_TMP_PRODUCTION : env.FOLDER_TMP_DEVELOPMENT
+
             // subir arquivo na pasta local
-            fs.writeFile(`./src/tmp/posts/${fileNameFormated}`, _buf, (err)=>{
+            fs.writeFile(`${folderTmp}/posts/${fileNameFormated}`, _buf, (err)=>{
               if (err) {
                 console.error('Erro ao salvar o arquivo:', err);
                 return reply.status(400).send({ message: 'Erro ao salvar o arquivo'})
@@ -63,9 +64,6 @@ export async function UpdatePost (request: FastifyRequest, reply:FastifyReply){
             return reply.status(200).send(post)
             
           } catch (error) {
-            if(error instanceof  ResourceNotFoundError){
-              return reply.status(404).send({ message: error.message})
-            }
             throw error
           }
 }

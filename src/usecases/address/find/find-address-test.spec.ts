@@ -1,8 +1,7 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
 import { InMemoryAddressesRepository } from "@/repositories/in-memory/in-memory-addresses-repository";
 import { FindAddressByIdUseCase } from "./find-address-usecase";
+import { AppError } from "@/usecases/errors/app-error";
 
 let addressRepositoryInMemory: InMemoryAddressesRepository;
 let stu: FindAddressByIdUseCase;
@@ -42,7 +41,7 @@ describe("Find address (unit)", () => {
         await expect(()=> stu.execute({
             id: 'id-faker-user-2'
         }),
-        ).rejects.toBeInstanceOf(ResourceNotFoundError)
+        ).rejects.toEqual(new AppError('Endereço não encontrado', 404))
     });
 
 })

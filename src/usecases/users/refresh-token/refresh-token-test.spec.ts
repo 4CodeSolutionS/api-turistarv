@@ -6,8 +6,8 @@ import { InMemoryTokensRepository } from "@/repositories/in-memory/in-memory-tok
 import { RefreshTokenUseCase } from "./refresh-token-usecase";
 import { InMemoryMailProvider } from "@/providers/MailProvider/in-memory/in-memory-mail-provider";
 import { LoginUseCase } from "../login/login-usecase";
-import { AccessTimeOutError } from "@/usecases/errors/access-time-out-error";
 import { Token } from "@prisma/client";
+import { AppError } from "@/usecases/errors/app-error";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
 let usersTokensRepositoryInMemory: InMemoryTokensRepository;
@@ -76,6 +76,6 @@ describe("Refresh token (unit)", () => {
         await expect(()=> stu.execute({ 
          token: userToken.token,
      }),
-         ).rejects.toBeInstanceOf(AccessTimeOutError)
+         ).rejects.toEqual(new AppError('Refresh token expirado', 401))
      });
 });

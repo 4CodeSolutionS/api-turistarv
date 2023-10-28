@@ -1,11 +1,7 @@
-import { CPFAlreadyExistsError } from '@/usecases/errors/cpf-already-exists-error'
-import { EmailAlreadyExistsError } from '@/usecases/errors/email-already-exists-error'
-import { ResourceNotFoundError } from '@/usecases/errors/resource-not-found-error'
 import { makeUpdateUser } from '@/usecases/factories/users/make-update-user-usecase'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import {cpf as CPF} from 'cpf-cnpj-validator'
 import { z } from 'zod'
-import { PassportAlreadyExistsError } from '@/usecases/errors/passport-already-exist-error'
 
 export async function UpdateUser (request: FastifyRequest, reply:FastifyReply){
         try {
@@ -48,18 +44,6 @@ export async function UpdateUser (request: FastifyRequest, reply:FastifyReply){
             return reply.status(200).send(user)
             
           } catch (error) {
-            if(error instanceof  ResourceNotFoundError){
-                return reply.status(404).send({ message: error.message})
-              }
-            if(error instanceof  EmailAlreadyExistsError){
-              return reply.status(409).send({ message: error.message})
-            }
-            if(error instanceof  CPFAlreadyExistsError){
-                return reply.status(401).send({ message: error.message})
-            }
-            if(error instanceof  PassportAlreadyExistsError){
-              return reply.status(401).send({ message: error.message})
-          }
             throw error
           }
 }

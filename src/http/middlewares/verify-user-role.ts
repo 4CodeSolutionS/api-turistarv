@@ -1,7 +1,6 @@
 import { Role } from "@prisma/client"
 import { FastifyReply, FastifyRequest } from "fastify"
 
-
 export function verifyUserRole(
     verifyToleRoleOne: Role, 
     verifyToleRoleTwo?: Role,

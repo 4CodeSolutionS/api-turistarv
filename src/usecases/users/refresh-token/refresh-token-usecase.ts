@@ -3,8 +3,7 @@ import { ITokensRepository } from "@/repositories/interface-tokens-repository";
 import { IDateProvider } from "@/providers/DateProvider/interface-date-provider";
 import { sign, verify } from "jsonwebtoken";
 import { env } from "@/env";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
-import { AccessTimeOutError } from '@/usecases/errors/access-time-out-error';
+import { AppError } from '@/usecases/errors/app-error';
 import { IPayload } from '@/http/middlewares/verify-token-jwt';
 
 interface IRequestRefreshToken {
@@ -28,7 +27,7 @@ export class RefreshTokenUseCase{
         const userToken = await this.usersTokensRepository.findByToken(token)
 
         if(!userToken){
-            throw new ResourceNotFoundError()
+            throw new AppError('Refresh token não encontrado', 404)
         }
         
         const verifyToken = this.dayjsDateProvider.compareIfBefore(
@@ -43,7 +42,7 @@ export class RefreshTokenUseCase{
                 await this.usersTokensRepository.delete(userToken.id)
                 // gerar um novo refresh token passando email no payload
 
-                throw new AccessTimeOutError()
+                throw new AppError('Refresh token expirado', 401)
             }
        
         verify(token, env.JWT_SECRET_REFRESH_TOKEN) as IPayload;

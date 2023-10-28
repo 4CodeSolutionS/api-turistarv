@@ -1,12 +1,11 @@
 import { IUsersRepository } from "@/repositories/interface-users-repository";
-import { EmailAlreadyExistsError } from "@/usecases/errors/email-already-exists-error";
 import 'dotenv/config'
 import { ITokensRepository } from "@/repositories/interface-tokens-repository";
 import { IDateProvider } from "@/providers/DateProvider/interface-date-provider";
 import { randomUUID } from "crypto";
 import { env } from "@/env";
 import { IMailProvider } from "@/providers/MailProvider/interface-mail-provider";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
+import { AppError } from "@/usecases/errors/app-error";
 
 interface IRequestForgotPasswordEmail {
     email: string
@@ -29,7 +28,7 @@ export class SendForgotPasswordUseCase{
 
         // validar se usuario existe no banco
         if(!findUserByEmail){
-            throw new ResourceNotFoundError()
+            throw new AppError('Usuário não encontrado', 404)
         }
         // pegar caminho do arquivo handlebars forgot-password.hbs
         let pathTemplate = env.NODE_ENV === "development" ? 
@@ -50,7 +49,7 @@ export class SendForgotPasswordUseCase{
         })
 
         // criar o link para redeinir senha
-        const link = `${env.APP_URL}/reset-password?token=${token}`
+        const link = `${env.APP_URL_DEVLOPMENT}/reset-password?token=${token}`
         // enviar email com link de recuperação de senha
         await this.sendMailProvider.sendEmail(
             findUserByEmail.email, 

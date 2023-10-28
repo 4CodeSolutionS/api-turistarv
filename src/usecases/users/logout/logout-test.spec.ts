@@ -6,9 +6,8 @@ import { InMemoryTokensRepository } from "@/repositories/in-memory/in-memory-tok
 import { InMemoryMailProvider } from "@/providers/MailProvider/in-memory/in-memory-mail-provider";
 import { LoginUseCase } from "../login/login-usecase";
 import { LogoutUseCase } from "./logout-usecase";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
-import { ICacheProvider } from "@/providers/CacheProvider/interface-cache";
 import { InMemoryCacheProvider } from "@/providers/CacheProvider/in-memory/in-memory-cache-provider";
+import { AppError } from "@/usecases/errors/app-error";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
 let usersTokensRepositoryInMemory: InMemoryTokensRepository;
@@ -111,7 +110,7 @@ describe("Logout (unit)", () => {
          idUser: user.id,
          token: accessToken
      }),
-         ).rejects.toBeInstanceOf(ResourceNotFoundError)
+         ).rejects.toEqual(new AppError('Refresh token não encontrado', 404)) 
      });
 
 });

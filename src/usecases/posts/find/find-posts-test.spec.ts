@@ -1,11 +1,8 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { InMemoryPostRepository } from "@/repositories/in-memory/in-memory-posts-repository";
-import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
-import { hash } from "bcrypt";
 import { randomUUID } from "crypto";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
 import { FindPostUseCase } from "./find-posts-usecase";
-import { CreatePostUseCase } from "../create/create-posts-usecase";
+import { AppError } from "@/usecases/errors/app-error";
 
 let postInMemoryRepository: InMemoryPostRepository;
 let stu: FindPostUseCase;
@@ -43,6 +40,6 @@ describe("Find post (unit)", () => {
 
         await expect(()=> stu.execute({
             id: idFake,
-        })).rejects.toEqual(new ResourceNotFoundError)
+        })).rejects.toEqual(new AppError('Post não encontrado', 404))
     });
 })

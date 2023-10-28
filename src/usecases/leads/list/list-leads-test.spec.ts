@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { InMemoryLeadsRepository } from "@/repositories/in-memory/in-memory-leads-repository";
-import { LeadAlreadyExistsError } from "@/usecases/errors/lead-already-exists-error";
 import { ListLeadUseCase } from "./list-leads-usecase";
 import { CreateLeadUseCase } from "../create/create-leads-usecase";
 

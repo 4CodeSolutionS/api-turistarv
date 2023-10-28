@@ -1,5 +1,5 @@
 import { IPostsRepository } from "@/repositories/interface-posts-repository";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
+import { AppError } from "@/usecases/errors/app-error";
 
 interface IRequestDeletePost {
     id: string
@@ -18,7 +18,7 @@ export class DeletePostUseCase{
 
         // validar se post existe
         if(!findPost){
-            throw new ResourceNotFoundError()
+            throw new AppError('Post não encontrado', 404)
         }
 
         // deletar post

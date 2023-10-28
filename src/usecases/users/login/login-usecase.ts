@@ -2,12 +2,11 @@ import { env } from "@/env";
 import { IDateProvider } from "@/providers/DateProvider/interface-date-provider";
 import { ITokensRepository } from "@/repositories/interface-tokens-repository";
 import { IUsersRepository } from "@/repositories/interface-users-repository";
-import { CredentialsInvalidError } from "@/usecases/errors/credentials-invalid-error";
+import { AppError } from "@/usecases/errors/app-error";
 import { User } from "@prisma/client";
 import { compare } from "bcrypt";
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
-import { IPayload } from "../refresh-token/refresh-token-usecase";
 
 interface IRequestLoginAccount {
     email: string,
@@ -33,14 +32,14 @@ export class LoginUseCase{
         const findUserExists = await this.usersRepository.findByEmail(email)
         
         if(!findUserExists){
-            throw new CredentialsInvalidError()
+            throw new AppError('Usuário ou senha incorretos', 401)
         }
 
         // comparar senha
         const passwordMatch = await compare(password, findUserExists.password)
 
         if(!passwordMatch){
-            throw new CredentialsInvalidError()
+            throw new AppError('Usuário ou senha incorretos', 401)
         }
        
         // Criar access token

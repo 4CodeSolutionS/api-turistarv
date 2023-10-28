@@ -168,6 +168,15 @@ describe('Acess Admin User (e2e)', ()=>{
             }
          })
 
+         const user = await prisma.user.create({
+            data:{
+                email: 'email57@test.com',
+                name: 'Kaio Moreira',
+                phone: '77-77777-7777',
+                password: '123456',
+            }
+         })
+
          const responseLoginUser = await request(fastifyApp.server)
          .post('/api/users/login')
          .send({
@@ -176,20 +185,7 @@ describe('Acess Admin User (e2e)', ()=>{
          })
  
          const { accessToken } = responseLoginUser.body
-
-         const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
-            email: 'email5@test.com',
-            name: 'Kaio Moreira',
-            phone: '77-77777-7777',
-            password: '123456',
-            rvLength: 10,
-            rvPlate: 'ABC-1234',
-            touristType: 'ADMIRADOR',
-            tugPlate: 'ABC-1234',
-            vehicleType: 'CAMPER',
-        })
-        const user = responseRegisterUser.body
-
+        
         const responseCreateKey = await request(fastifyApp.server)
         .post(`/api/keys`)
         .set('Authorization', `Bearer ${accessToken}`)

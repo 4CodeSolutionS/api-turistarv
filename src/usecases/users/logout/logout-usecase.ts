@@ -1,8 +1,8 @@
 import 'dotenv/config'
 import { ITokensRepository } from "@/repositories/interface-tokens-repository";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
 import { IDateProvider } from '@/providers/DateProvider/interface-date-provider';
 import { ICacheProvider } from '@/providers/CacheProvider/interface-cache';
+import { AppError } from '@/usecases/errors/app-error';
 
 interface IRequestLogout {
     token: string
@@ -25,7 +25,7 @@ export class LogoutUseCase{
         const userToken = await this.usersTokensRepository.findByUserAndToken(idUser, refreshToken)
 
         if(!userToken){
-            throw new ResourceNotFoundError()
+            throw new AppError('Refresh token não encontrado', 404)
         }
 
         // deletar refresh token do banco de dados

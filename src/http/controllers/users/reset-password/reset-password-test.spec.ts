@@ -1,8 +1,7 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import request from 'supertest'
 import { fastifyApp } from "@/app";
 import { Token } from "@prisma/client";
-import { createAndAuthenticateUser } from "@/utils/test/create-and-authenticate-user";
 import { prisma } from "@/lib/prisma";
 
 describe('Reset passowrd (e2e)', ()=>{
@@ -15,11 +14,24 @@ describe('Reset passowrd (e2e)', ()=>{
     })
 
     test('should be able to reset password a user', async()=>{
-        const {user} = await createAndAuthenticateUser(fastifyApp)
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            dateBirth: '2023-10-03',
+            email: 'email1@test.com',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
+
+        const {id, email} = responseRegisterUser.body
 
         const {token} = await prisma.token.findFirstOrThrow({
             where:{
-                idUser: user.id
+                idUser: id
             }
         }) as unknown as Token
 

@@ -2,11 +2,7 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import { hash } from "bcrypt";
 import { UpdateUserUseCase } from "./update-user-usecase";
-import { ResourceNotFoundError } from "@/usecases/errors/resource-not-found-error";
-import { CPFAlreadyExistsError } from "@/usecases/errors/cpf-already-exists-error";
-import { EmailAlreadyExistsError } from "@/usecases/errors/email-already-exists-error";
-import { Prisma } from "@prisma/client";
-import { PassportAlreadyExistsError } from "@/usecases/errors/passport-already-exist-error";
+import { AppError } from "@/usecases/errors/app-error";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
 let stu: UpdateUserUseCase;
@@ -74,7 +70,7 @@ describe("Update user (unit)", () => {
             dateBirth: new Date('1995-10-03'),
             name: 'Sarah Moreira',
             phone: '77-7777-9999',
-        })).rejects.toBeInstanceOf(ResourceNotFoundError)
+        })).rejects.toEqual(new AppError('Usuário não encontrado', 404))
     });
 
     test("Should not be able to update a user account with cpf already exists", async () => {
@@ -84,7 +80,7 @@ describe("Update user (unit)", () => {
             name: 'Sarah Moreira',
             phone: '77-7777-9999',
             cpf: '524.658.490-93'
-        })).rejects.toBeInstanceOf(CPFAlreadyExistsError)
+        })).rejects.toEqual(new AppError('CPF já cadastrado', 409))
     });
 
     test("Should not be able to update a user account with passport already exists", async () => {
@@ -94,7 +90,7 @@ describe("Update user (unit)", () => {
             name: 'Sarah Moreira',
             phone: '77-7777-9999',
             passport: '123456789'
-        })).rejects.toBeInstanceOf(PassportAlreadyExistsError)
+        })).rejects.toEqual(new AppError('Passaporte já cadastrado', 409))
     });
 
 });

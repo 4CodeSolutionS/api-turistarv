@@ -1,5 +1,4 @@
 import { PrismaLeadRepository } from "@/repositories/prisma/prisma-leads-repository";
-import { CreateLeadUseCase } from "@/usecases/leads/create/create-leads-usecase";
 import { ListLeadUseCase } from "@/usecases/leads/list/list-leads-usecase";
 
 export async function makeListLead(): Promise<ListLeadUseCase> {

@@ -13,7 +13,6 @@ describe('Send email forgot password (e2e)', ()=>{
 
     test('should be able to send email with link for reset password', async()=>{
         const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
-            cpf: "524.658.490-93",
             dateBirth: '2023-10-03',
             email: 'email1@test.com',
             name: 'Kaio Moreira',
@@ -26,12 +25,12 @@ describe('Send email forgot password (e2e)', ()=>{
             vehicleType: 'CAMPER',
         })
 
-        const user = responseRegisterUser.body
+        const {email} = responseRegisterUser.body
 
         const response = await request(fastifyApp.server)
         .post(`/api/users/forgot-password`)
         .send({
-            email: user.email
+            email: email
         })
 
         expect(response.statusCode).toEqual(200)

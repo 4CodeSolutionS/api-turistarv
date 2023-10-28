@@ -2,9 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vit
 import request from 'supertest'
 import { fastifyApp } from "@/app";
 import { Token, User } from "@prisma/client";
-import { createAndAuthenticateUser } from "@/utils/test/create-and-authenticate-user";
 import { prisma } from "@/lib/prisma";
-import { randomUUID } from "crypto";
 
 describe('Verify e-mail User (e2e)', ()=>{
     beforeAll(async()=>{
@@ -19,21 +17,34 @@ describe('Verify e-mail User (e2e)', ()=>{
     })
 
     test('should be able to verify e-mail a user', async()=>{
-        const {user} = await createAndAuthenticateUser(fastifyApp)
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            dateBirth: '2023-10-03',
+            email: 'email1@test.com',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
+
+        const {id, email} = responseRegisterUser.body
 
         const {token} = await prisma.token.findFirstOrThrow({
             where:{
-                idUser: user.id
+                idUser: id
             }
         }) as unknown as Token
 
         const response = await request(fastifyApp.server)
-        .patch(`/api/users/verify-email?email=${user.email}&token=${token}`)
+        .patch(`/api/users/verify-email?email=${email}&token=${token}`)
         .send()
 
         const findUser = await prisma.user.findUniqueOrThrow({
             where:{
-                id: user.id
+                id: id
             }
         })
         expect(response.statusCode).toEqual(200)
@@ -46,14 +57,30 @@ describe('Verify e-mail User (e2e)', ()=>{
     })
 
     test('should not be able to verify e-mail user with wrong email', async()=>{
-        const {accessToken, user} = await createAndAuthenticateUser(
-            fastifyApp,
-            randomUUID(),
-            "user2@test.com"
-            
-            )
+        const responseRegisterUser = await request(fastifyApp.server).post('/api/users').send({
+            dateBirth: '2023-10-03',
+            email: 'email2@test.com',
+            name: 'Kaio Moreira',
+            phone: '77-77777-7777',
+            password: '123456',
+            rvLength: 10,
+            rvPlate: 'ABC-1234',
+            touristType: 'ADMIRADOR',
+            tugPlate: 'ABC-1234',
+            vehicleType: 'CAMPER',
+        })
+        const {id} = responseRegisterUser.body
+
+        const email = 'email@fake.com'
+
+        const {token} = await prisma.token.findFirstOrThrow({
+            where:{
+                idUser: id
+            }
+        }) as unknown as Token
+
         const response = await request(fastifyApp.server)
-        .patch(`/api/users/verify-email?email=${user.email}&token=${accessToken}`)
+        .patch(`/api/users/verify-email?email=${email}&token=${token}`)
         .send()
 
         expect(response.statusCode).toEqual(404)

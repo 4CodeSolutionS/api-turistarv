@@ -2,10 +2,10 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { InMemoryUsersRepository } from "@/repositories/in-memory/in-memory-users-repository";
 import { LoginUseCase } from "./login-usecase";
 import { hash } from "bcrypt";
-import { CredentialsInvalidError } from "@/usecases/errors/credentials-invalid-error";
 import 'dotenv/config'
 import { InMemoryTokensRepository } from "@/repositories/in-memory/in-memory-tokens-repository";
 import { DayjsDateProvider } from "@/providers/DateProvider/implementations/provider-dayjs";
+import { AppError } from "@/usecases/errors/app-error";
 
 let usersRepositoryInMemory: InMemoryUsersRepository;
 let usersTokensRepositoryInMemory: InMemoryTokensRepository;
@@ -53,7 +53,7 @@ describe("Login user (unit)", () => {
             email: 'email@test.com',
             password: '12345666',
         }),
-        ).rejects.toBeInstanceOf(CredentialsInvalidError)
+        ).rejects.toEqual(new AppError('Usuário ou senha incorretos', 401))
     })
 
     test('should not be able to login with wrong email', async()=>{
@@ -61,7 +61,7 @@ describe("Login user (unit)", () => {
             email: 'email@wrong.test',
             password: '12345666',
         }),
-        ).rejects.toBeInstanceOf(CredentialsInvalidError)
+        ).rejects.toEqual(new AppError('Usuário ou senha incorretos', 401))
     })
 
    
