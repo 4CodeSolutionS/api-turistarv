@@ -43,7 +43,14 @@ export class PrismaCampingRepository implements ICampingsRepository{
         const camping = await prisma.camping.findUnique({
             where: {
                 id
-            }
+            },
+            select:{
+                id:true,
+                name:true,
+                propertyRules:true,
+                active:true,
+                images:true,
+            }   
         })
 
         return camping
