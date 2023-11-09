@@ -19,7 +19,7 @@ export async function LogoutUser (request: FastifyRequest, reply:FastifyReply){
             idUser: request.user.id,
             token: request.user.token
         })
-        return reply.status(200).send({message: 'Logout performed successfully!'})
+        return reply.status(200).send({message: 'Logout feito com sucesso'})
 
       } catch (error) {
         
