@@ -139,6 +139,7 @@ model Image {
 model Camping {
   id            String  @id @unique @default(uuid())
   name          String  @unique
+  description   String
   propertyRules String
   active        Boolean
 

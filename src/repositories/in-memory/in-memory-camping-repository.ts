@@ -20,6 +20,7 @@ export class InMemoryCampingRepository implements ICampingsRepository{
         name,
         propertyRules,
         active,
+        description,
         images,
     }: Prisma.CampingUncheckedCreateInput){
         const camping = {
@@ -27,6 +28,7 @@ export class InMemoryCampingRepository implements ICampingsRepository{
             name,
             propertyRules,
             active,
+            description,
             images
         }
 
