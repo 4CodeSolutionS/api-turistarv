@@ -27,7 +27,6 @@ export class PrismaUsersRepository implements IUsersRepository{
                 dateBirth: true,
                 phone: true,
                 address: true,
-                posts: true,
                 role: true,
                 createdAt: true,
             }
@@ -78,7 +77,6 @@ export class PrismaUsersRepository implements IUsersRepository{
                 dateBirth: true,
                 phone: true,
                 address: true,
-                posts: true,
                 role: true,
                 createdAt: true,
             }
@@ -122,7 +120,6 @@ export class PrismaUsersRepository implements IUsersRepository{
                 dateBirth: true,
                 phone: true,
                 address: true,
-                posts: true,
                 role: true,
                 createdAt: true,
             }
@@ -145,7 +142,6 @@ export class PrismaUsersRepository implements IUsersRepository{
                     dateBirth: true,
                     phone: true,
                     address: true,
-                    posts: true,
                     role: true,
                     createdAt: true,
                 }
@@ -166,7 +162,6 @@ export class PrismaUsersRepository implements IUsersRepository{
                 dateBirth: true,
                 phone: true,
                 address: true,
-                posts: true,
                 role: true,
                 createdAt: true,
             }
@@ -189,7 +184,6 @@ export class PrismaUsersRepository implements IUsersRepository{
                 dateBirth: true,
                 phone: true,
                 address: true,
-                posts: true,
                 role: true,
                 createdAt: true,
             }
@@ -212,7 +206,6 @@ export class PrismaUsersRepository implements IUsersRepository{
                 dateBirth: true,
                 phone: true,
                 address: true,
-                posts: true,
                 role: true,
                 createdAt: true,
             }
@@ -247,7 +240,6 @@ export class PrismaUsersRepository implements IUsersRepository{
                 dateBirth: true,
                 phone: true,
                 address: true,
-                posts: true,
                 role: true,
                 createdAt: true,
             },
