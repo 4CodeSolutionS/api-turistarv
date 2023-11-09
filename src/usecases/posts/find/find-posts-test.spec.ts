@@ -16,7 +16,6 @@ describe("Find post (unit)", () => {
         )
         await postInMemoryRepository.create({
             id: "14f6e34b-333b-4a35-a989-47f8004513ed",
-            idUser: "14f6e34b-333b-4a35-a989-47f8004513ed",
             title: "title",
             body: "body",
             image: "nestjs.png"

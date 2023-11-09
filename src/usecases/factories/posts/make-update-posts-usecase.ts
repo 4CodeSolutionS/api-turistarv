@@ -4,12 +4,10 @@ import { PrismaUsersRepository } from "@/repositories/prisma/prisma-users-reposi
 import { UpdatePostUseCase } from "@/usecases/posts/update-full/update-posts-usecase";
 
 export async function makeUpdatePost(): Promise<UpdatePostUseCase> {
-    const usersRepository = new PrismaUsersRepository();
     const postsRepository = new PrismaPostsRepository();
     const storageProvider = new FirebaseStorageProvider()
     const updatePostUseCase = new UpdatePostUseCase(
         postsRepository,
-        usersRepository, 
         storageProvider
         )
 

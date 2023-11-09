@@ -31,7 +31,6 @@ model User {
   role            Role      @default(GUEST)
   createdAt       DateTime  @default(now())
 
-  posts   Post[]
   address Address[]
   Token   Token[]
 
@@ -63,8 +62,6 @@ model Lead {
 
 model Post {
   id     String   @id @unique @default(uuid())
-  user   User?    @relation(fields: [idUser], references: [id])
-  idUser String?
   title  String
   body   String
   date   DateTime @default(now())
@@ -128,4 +125,25 @@ model Key {
   createdAt DateTime @default(now())
 
   @@map("keys")
+}
+
+model Image {
+  id        String  @id @unique @default(uuid())
+  camping   Camping @relation(fields: [idCamping], references: [id])
+  idCamping String
+  url       String
+
+  @@map("images")
+}
+
+model Camping {
+  id            String  @id @unique @default(uuid())
+  name          String  @unique
+  propertyRules String
+  active        Boolean
+
+  // Box Box[]
+  images Image[]
+
+  @@map("campings")
 }

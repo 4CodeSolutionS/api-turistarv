@@ -8,14 +8,12 @@ export class InMemoryPostRepository implements IPostsRepository{
         id, 
         body,
         title,
-        idUser,
         image,
     }: Prisma.PostUncheckedCreateInput){
         const posts = {
             id: id ? id : randomUUID(),
             body,
             title,
-            idUser: idUser ? idUser : null,
             image,
             active: true,
             date: new Date(),

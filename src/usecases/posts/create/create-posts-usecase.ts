@@ -6,7 +6,6 @@ import { AppError } from "@/usecases/errors/app-error";
 import { Post } from "@prisma/client";
 
 interface IRequestCreatePost {
-    idUser: string
     title: string
     body: string
     image: string
@@ -15,33 +14,22 @@ interface IRequestCreatePost {
 export class CreatePostUseCase{
     constructor(
        private postsRepository: IPostsRepository,
-       private usersRepository: IUsersRepository,
        private storageProvider:  IStorageProvider
     ) {}
 
     async execute({
       body,
       title,
-      idUser,
       image
     }:IRequestCreatePost):Promise<Post>{
-        // encontrar usuario pelo id
-        const findUserExist = await this.usersRepository.findById(idUser)
-
-        // validar se usuario existe
-        if(!findUserExist){
-            throw new AppError('Usuário não encontrado', 404)
-        }
-        
         const pathFolder = env.NODE_ENV === "production" ? `${env.FOLDER_TMP_PRODUCTION}/posts` : `${env.FOLDER_TMP_DEVELOPMENT}/posts`
 
         // salvar imagem no storage
-        const fileName = await this.storageProvider.uploadFile(image, pathFolder, 'turistarv')
+        const fileName = await this.storageProvider.uploadFile(image, pathFolder, 'posts')
         //[x] criar post
         const post = await this.postsRepository.create({
             body,
             title,
-            idUser,
             image: fileName as string
         });
 

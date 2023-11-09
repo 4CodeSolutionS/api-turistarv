@@ -8,9 +8,6 @@ import { env } from '@/env'
 export async function CreatePost (request: FastifyRequest, reply:FastifyReply){
         try {
             const multiparformSchema = z.object({
-                idUser: z.object({
-                  value: z.string().uuid().nonempty()
-                }),
                 title: z.object({
                   value: z.string().nonempty(),
                 }),
@@ -23,12 +20,11 @@ export async function CreatePost (request: FastifyRequest, reply:FastifyReply){
                 }).required(),
             })
            
-              const {image, title, body, idUser} = multiparformSchema.parse(request.body)
+              const {image, title, body} = multiparformSchema.parse(request.body)
 
               const { filename, _buf } = image
               const { value: titleValue } = title
               const { value: bodyValue } = body
-              const { value: idUserValue } = idUser
 
             const fileNameFormated = `${randomUUID()} - ${filename}`;
 
@@ -46,7 +42,6 @@ export async function CreatePost (request: FastifyRequest, reply:FastifyReply){
             
             const post = await createPostUseCase.execute({
                 body: bodyValue,
-                idUser: idUserValue,
                 title: titleValue,
                 image: fileNameFormated
             })

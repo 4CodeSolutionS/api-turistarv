@@ -7,7 +7,6 @@ import { Post } from "@prisma/client";
 
 interface IRequestUpdatePost {
     id:string
-    idUser: string
     title: string
     body: string
     image: string
@@ -17,7 +16,6 @@ interface IRequestUpdatePost {
 export class UpdatePostUseCase{
     constructor(
        private postsRepository: IPostsRepository,
-       private usersRepository: IUsersRepository,
        private storageProvider:  IStorageProvider
     ) {}
 
@@ -25,7 +23,6 @@ export class UpdatePostUseCase{
       id,
       body,
       title,
-      idUser,
       image,
       active
     }:IRequestUpdatePost):Promise<Post>{
@@ -37,19 +34,11 @@ export class UpdatePostUseCase{
             throw new AppError('Post não encontrado', 404)   
         }
         
-        // encontrar usuario pelo id
-        const findUserExist = await this.usersRepository.findById(idUser)
-
-        // validar se usuario existe
-        if(!findUserExist){
-            throw new AppError('Usuário não encontrado', 404)    
-        }
-
         // env.FOLDER_TMP
         const pathFolder = env.NODE_ENV === "production" ? `${env.FOLDER_TMP_PRODUCTION}/posts` : `${env.FOLDER_TMP_DEVELOPMENT}/posts`
         
         // salvar imagem no storage
-         const fileName = await this.storageProvider.uploadFile(image, pathFolder, 'turistarv')
+         const fileName = await this.storageProvider.uploadFile(image, pathFolder, 'posts')
         // atualizar post
         const post = await this.postsRepository.updateById({
             id,

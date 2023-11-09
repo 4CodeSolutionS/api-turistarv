@@ -37,9 +37,6 @@ describe('Update Post (e2e)', ()=>{
         const resposeCreatePost = await request(fastifyApp.server)
         .post('/api/posts')
         .send({
-            idUser: {
-                value: user.id
-            },
             title: {
                 value: "primeiro post"
             },
@@ -60,9 +57,6 @@ describe('Update Post (e2e)', ()=>{
         .send({
             id: {
                 value: id
-            },
-            idUser: {
-                value: user.id
             },
             title: {
                 value: "primeiro post atualizado"
@@ -106,9 +100,6 @@ describe('Update Post (e2e)', ()=>{
         const resposeCreatePost = await request(fastifyApp.server)
         .post('/api/posts')
         .send({
-            idUser: {
-                value: user.id
-            },
             title: {
                 value: "primeiro post"
             },
@@ -129,9 +120,6 @@ describe('Update Post (e2e)', ()=>{
         .send({
             id: {
                 value: id
-            },
-            idUser: {
-                value: randomUUID()
             },
             title: {
                 value: "primeiro post atualizado"
@@ -175,9 +163,6 @@ describe('Update Post (e2e)', ()=>{
         const resposeCreatePost = await request(fastifyApp.server)
         .post('/api/posts')
         .send({
-            idUser: {
-                value: user.id
-            },
             title: {
                 value: "primeiro post"
             },
@@ -198,9 +183,6 @@ describe('Update Post (e2e)', ()=>{
         .send({
             id: {
                 value: randomUUID()
-            },
-            idUser: {
-                value: user.id
             },
             title: {
                 value: "primeiro post atualizado"
