@@ -24,7 +24,6 @@ export async function CreateCamping(request: FastifyRequest, reply:FastifyReply)
                   }),
                 ).nonempty(),
             })
-           
               const {
                 name,
                 propertyRules,

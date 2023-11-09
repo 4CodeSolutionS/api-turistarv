@@ -27,7 +27,15 @@ export class PrismaCampingRepository implements ICampingsRepository{
         return camping
     }
     async list(){
-        const campings = await prisma.camping.findMany()
+        const campings = await prisma.camping.findMany({
+            select:{
+                id:true,
+                name:true,
+                propertyRules:true,
+                active:true,
+                images:true,
+            }
+        })
 
         return campings
     }
