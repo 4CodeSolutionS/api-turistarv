@@ -13,5 +13,7 @@ export async function campingRoutes(fastifyApp: FastifyInstance) {
 
     fastifyApp.get('/', ListCamping)
 
-    fastifyApp.delete('/', DeleteCamping)
+    fastifyApp.delete('/',{
+        onRequest: [verifyTokenJWT, verifyUserRole('ADMIN', 'SUPER')],
+    }, DeleteCamping)
 }
