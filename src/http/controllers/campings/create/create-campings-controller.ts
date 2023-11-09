@@ -14,6 +14,9 @@ export async function CreateCamping(request: FastifyRequest, reply:FastifyReply)
                 propertyRules: z.object({
                   value: z.string().nonempty(),
                 }),
+                description: z.object({
+                  value: z.string().nonempty()
+                }),
                 active: z.object({
                   value: z.coerce.boolean()
                 }),
@@ -28,11 +31,13 @@ export async function CreateCamping(request: FastifyRequest, reply:FastifyReply)
                 name,
                 propertyRules,
                 active,
+                description,
                 images
               } = multiparformSchema.parse(request.body)
               const { value: nameValue } = name
               const { value: propertyRulesValue } = propertyRules
               const { value: activeValue } = active
+              const { value: descriptionValue } = description
 
             // criar array de nomes de arquivos
             const fileNamesFormated = []
@@ -60,6 +65,7 @@ export async function CreateCamping(request: FastifyRequest, reply:FastifyReply)
                name: nameValue,
                propertyRules: propertyRulesValue,
                active: activeValue,
+              description: descriptionValue,
                fileNameImages: fileNamesFormated
             })
             return reply.status(200).send(camping)

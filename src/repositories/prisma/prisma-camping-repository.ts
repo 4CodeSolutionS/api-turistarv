@@ -20,6 +20,7 @@ export class PrismaCampingRepository implements ICampingsRepository{
                 name:true,
                 propertyRules:true,
                 active:true,
+                description:true,
                 images:true,
             }
         })
@@ -33,6 +34,7 @@ export class PrismaCampingRepository implements ICampingsRepository{
                 name:true,
                 propertyRules:true,
                 active:true,
+                description:true,
                 images:true,
             }
         })
@@ -49,6 +51,7 @@ export class PrismaCampingRepository implements ICampingsRepository{
                 name:true,
                 propertyRules:true,
                 active:true,
+                description:true,
                 images:true,
             }   
         })

@@ -8,6 +8,7 @@ interface IRequestCreateCamping{
     name: string
     propertyRules: string
     active: boolean
+    description: string
     fileNameImages: string[]
 }
 
@@ -21,6 +22,7 @@ export class CreateCampingUseCase {
         name,
         propertyRules,
         active,
+        description,
         fileNameImages
     }: IRequestCreateCamping): Promise<Camping>{
         // buscar camping pelo nome
@@ -51,6 +53,7 @@ export class CreateCampingUseCase {
             name,
             propertyRules,
             active,
+            description,
             images:{
                 createMany:{
                    data: arrayImagesUrl.map(image => ({ url: image })) 
