@@ -36,9 +36,6 @@ describe('Create Post (e2e)', ()=>{
         const resposeCreatePost = await request(fastifyApp.server)
         .post('/api/posts')
         .send({
-            idUser: {
-                value: user.id
-            },
             title: {
                 value: "primeiro post"
             },

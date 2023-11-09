@@ -19,7 +19,6 @@ describe("List post (unit)", () => {
         for(let i = 0; i < 10; i++){
             await postInMemoryRepository.create({
                 id: randomUUID(),
-                idUser: randomUUID(),
                 title: "title",
                 body: "content",
                 date: new Date(),

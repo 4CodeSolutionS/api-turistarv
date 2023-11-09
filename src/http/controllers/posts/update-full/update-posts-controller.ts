@@ -11,9 +11,6 @@ export async function UpdatePost (request: FastifyRequest, reply:FastifyReply){
                 id: z.object({
                   value: z.string().uuid().nonempty()
                 }),
-                idUser: z.object({
-                  value: z.string().uuid().nonempty()
-                }),
                 title: z.object({
                   value: z.string().nonempty(),
                 }),
@@ -29,12 +26,11 @@ export async function UpdatePost (request: FastifyRequest, reply:FastifyReply){
                 }).required(),
             })
            
-              const {id, image, title, body, idUser, active} = multiparformSchema.parse(request.body)
+              const {id, image, title, body, active} = multiparformSchema.parse(request.body)
 
               const { filename, _buf } = image
               const { value: titleValue } = title
               const { value: bodyValue } = body
-              const { value: idUserValue } = idUser
               const { value: idValue } = id
               const { value: activeValue } = active
 
@@ -55,7 +51,6 @@ export async function UpdatePost (request: FastifyRequest, reply:FastifyReply){
             const post = await createPostUseCase.execute({
                 id:idValue,
                 body: bodyValue,
-                idUser: idUserValue,
                 title: titleValue,
                 image: fileNameFormated,
                 active: activeValue
