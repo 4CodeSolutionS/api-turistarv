@@ -5,8 +5,19 @@ import { z } from 'zod'
 import * as fs from 'fs'
 import { makeCreateCamping } from '@/usecases/factories/campings/make-create-campings-usecase'
 
+interface IImage{
+  filename: string;
+  _buf?: any;
+}
+
 export async function CreateCamping(request: FastifyRequest, reply:FastifyReply){
         try {
+          console.log(request.body)
+            const ImageSchema = z.object({
+              filename: z.string().nonempty(),
+              _buf: z.instanceof(Buffer),
+            })
+
             const multiparformSchema = z.object({
                 name: z.object({
                   value: z.string().nonempty()
@@ -20,19 +31,17 @@ export async function CreateCamping(request: FastifyRequest, reply:FastifyReply)
                 active: z.object({
                   value: z.coerce.boolean()
                 }),
-                images: z.array(
-                  z.object({
-                      filename: z.string().nonempty(),
-                      _buf: z.any()
-                  }),
-                ).nonempty(),
+                // converte um objeto em array e vice-versa
+                images: z.union([ImageSchema, ImageSchema.array()]).transform((value) => {
+                  return Array.isArray(value) ? value : [value]
+                })
             })
               const {
                 name,
                 propertyRules,
                 active,
                 description,
-                images
+                images,
               } = multiparformSchema.parse(request.body)
               const { value: nameValue } = name
               const { value: propertyRulesValue } = propertyRules
