@@ -31,7 +31,7 @@ export async function CreateCamping(request: FastifyRequest, reply:FastifyReply)
                 active: z.object({
                   value: z.coerce.boolean()
                 }),
-                // converte um objeto em array e vice-versa
+                // converte um objeto em array e retorna um array
                 images: z.union([ImageSchema, ImageSchema.array()]).transform((value) => {
                   return Array.isArray(value) ? value : [value]
                 })

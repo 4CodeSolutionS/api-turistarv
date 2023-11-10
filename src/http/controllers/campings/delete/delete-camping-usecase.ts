@@ -15,6 +15,8 @@ export async function DeleteCamping (request: FastifyRequest, reply:FastifyReply
             await deleteCampingUseCase.execute({
                id
             })
+
+            return reply.status(200).send({message: 'Camping deletado com sucesso'})
           } catch (error) {
             throw error
           }

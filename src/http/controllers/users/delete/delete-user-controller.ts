@@ -19,7 +19,7 @@ export async function DeleteUser (request: FastifyRequest, reply:FastifyReply){
             })
             
             
-            return reply.status(200).send({message: 'User deleted successfully'})
+            return reply.status(200).send({message: 'Usuário deletado com sucesso'})
             
           } catch (error) {
             throw error
