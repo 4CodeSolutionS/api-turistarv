@@ -65,7 +65,7 @@ export async function CreateCamping(request: FastifyRequest, reply:FastifyReply)
                name: nameValue,
                propertyRules: propertyRulesValue,
                active: activeValue,
-              description: descriptionValue,
+               description: descriptionValue,
                fileNameImages: fileNamesFormated
             })
             return reply.status(200).send(camping)

@@ -24,7 +24,6 @@ export class DeleteCampingUseCase{
     }:IRequestDeleteCampings):Promise<void>{
         // buscar camping pelo id
         const camping = await this.campingRepository.findById(id) as unknown as ICamping
-        console.log(camping)
         // validar se camping existe
         if(!camping){
             throw new AppError('Camping não encontrado', 404)
