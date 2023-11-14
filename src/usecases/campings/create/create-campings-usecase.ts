@@ -61,7 +61,7 @@ export class CreateCampingUseCase {
             propertyRules,
             active,
             description,
-            areaImage: areaImageName ? uploadAreaImage : undefined,
+            areaImage: areaImageName ? uploadAreaImage : null,
             images:{
                 createMany:{
                    data: arrayImagesUrl.map(image => ({ url: image })) 
