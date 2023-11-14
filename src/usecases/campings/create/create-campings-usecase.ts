@@ -50,8 +50,9 @@ export class CreateCampingUseCase {
             arrayImagesUrl.push(urlUploded)
         }
 
+        let uploadAreaImage = ''
         if(areaImageName){
-            const uploadAreaImage = await this.storageProvider.uploadFile(areaImageName, pathFolder, 'campings') as string
+            uploadAreaImage = await this.storageProvider.uploadFile(areaImageName, pathFolder, 'campings') as string
         }
 
         // criar camping no banco de dados
@@ -60,7 +61,7 @@ export class CreateCampingUseCase {
             propertyRules,
             active,
             description,
-            areaImage: areaImageName ? areaImageName : undefined,
+            areaImage: areaImageName ? uploadAreaImage : null,
             images:{
                 createMany:{
                    data: arrayImagesUrl.map(image => ({ url: image })) 
