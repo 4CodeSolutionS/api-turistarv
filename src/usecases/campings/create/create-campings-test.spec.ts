@@ -16,6 +16,20 @@ describe("Create camping (unit)", () => {
             campingRepositoryInMemory,
             storageProviderInMemory
         )
+
+        // criar camping
+        await campingRepositoryInMemory.create({
+            id: '1edbd710-bfcb-4795-9b99-3aca168cbc88',
+            name: "Camping Test",
+            propertyRules: "Proibido fumar, Proibido animais",
+            active: true,
+            description: "Camping Test",
+            images:{
+                createMany:{
+                   data: [ { url: "image1.jpg" }, { url: "image2.jpg" } ] 
+                }
+            }
+        });
     });
 
     test("Should be able to create camping", async () => {
@@ -23,6 +37,7 @@ describe("Create camping (unit)", () => {
            name: "Camping Test",
            propertyRules: "Proibido fumar, Proibido animais",
            active: true,
+           description: "Camping Test",
            fileNameImages: ["nestjs.png", "turista-logo.png"]
         });
         expect(camping).toEqual(

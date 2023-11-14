@@ -3,9 +3,9 @@ import { randomUUID } from 'crypto'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import * as fs from 'fs'
-import { makeCreateCamping } from '@/usecases/factories/campings/make-create-campings-usecase'
+import { makeUpdateCamping } from '@/usecases/factories/campings/make-update-campings-usecase'
 
-export async function CreateCamping(request: FastifyRequest, reply:FastifyReply){
+export async function UpdateCamping(request: FastifyRequest, reply:FastifyReply){
         try {
             const ImageSchema = z.object({
               filename: z.string(),
@@ -13,6 +13,9 @@ export async function CreateCamping(request: FastifyRequest, reply:FastifyReply)
             })
 
             const multiparformSchema = z.object({
+                idCamping: z.object({
+                  value: z.string().uuid(),
+                }),
                 name: z.object({
                   value: z.string()
                 }),
@@ -28,17 +31,18 @@ export async function CreateCamping(request: FastifyRequest, reply:FastifyReply)
                 // converte um objeto em array e retorna um array
                 images: z.union([ImageSchema, ImageSchema.array()]).transform((value) => {
                   return Array.isArray(value) ? value : [value]
-                }),
-                areaImage: ImageSchema
+                })
             })
               const {
+                idCamping,
                 name,
                 propertyRules,
                 active,
                 description,
                 images,
-                areaImage,
               } = multiparformSchema.parse(request.body)
+
+              const { value: idCampingValue } = idCamping
               const { value: nameValue } = name
               const { value: propertyRulesValue } = propertyRules
               const { value: activeValue } = active
@@ -46,8 +50,6 @@ export async function CreateCamping(request: FastifyRequest, reply:FastifyReply)
 
             // criar array de nomes de arquivos
             const fileNamesFormated = []
-            let areaImageUpload = ''
-
             for(let image of images){
               
               const fileNameFormated = `${randomUUID()} - ${image.filename}`;
@@ -63,29 +65,18 @@ export async function CreateCamping(request: FastifyRequest, reply:FastifyReply)
               })
 
               fileNamesFormated.push(fileNameFormated)
-
-              if(areaImage){
-                areaImageUpload = `${randomUUID()} - ${areaImage.filename}`;
-
-                fs.writeFile(`${folderTmp}/campings/${areaImageUpload}`, areaImage._buf, (err)=>{
-                  if (err) {
-                    console.error('Erro ao salvar o arquivo:', err);
-                    return reply.status(400).send({ message: 'Erro ao salvar o arquivo'})
-                  }
-                })
-              }
             }
-            const createCampingUseCase = await makeCreateCamping()
+            const updateCampingUseCase = await makeUpdateCamping()
             
-            const camping = await createCampingUseCase.execute({
+            await updateCampingUseCase.execute({
+               idCamping: idCampingValue,
                name: nameValue,
                propertyRules: propertyRulesValue,
                active: activeValue,
                description: descriptionValue,
-               areaImageName: areaImageUpload,
                fileNameImages: fileNamesFormated
             })
-            return reply.status(200).send(camping)
+            return reply.status(200).send({ message: 'Camping atualizado com sucesso'})
             
           } catch (error) {
             

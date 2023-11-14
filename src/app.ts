@@ -71,7 +71,6 @@ fastifyApp.register(campingRoutes,{
   prefix: 'api/campings'
 })
 
-
 fastifyApp.setErrorHandler((error:FastifyError,request:FastifyRequest, reply: FastifyReply)=>{
   if(env.NODE_ENV !== 'production'){
   }else{
