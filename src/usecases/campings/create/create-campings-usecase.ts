@@ -9,7 +9,7 @@ interface IRequestCreateCamping{
     propertyRules: string
     active: boolean
     description: string
-    areaImageName: string
+    areaImageName?: string
     fileNameImages: string[]
 }
 
@@ -50,7 +50,9 @@ export class CreateCampingUseCase {
             arrayImagesUrl.push(urlUploded)
         }
 
-        const uploadAreaImage = await this.storageProvider.uploadFile(areaImageName, pathFolder, 'campings') as string
+        if(areaImageName){
+            const uploadAreaImage = await this.storageProvider.uploadFile(areaImageName, pathFolder, 'campings') as string
+        }
 
         // criar camping no banco de dados
         const camping = await this.campingRepository.create({
@@ -58,7 +60,7 @@ export class CreateCampingUseCase {
             propertyRules,
             active,
             description,
-            areaImage: uploadAreaImage,
+            areaImage: areaImageName ? areaImageName : undefined,
             images:{
                 createMany:{
                    data: arrayImagesUrl.map(image => ({ url: image })) 

@@ -29,7 +29,7 @@ export async function CreateCamping(request: FastifyRequest, reply:FastifyReply)
                 images: z.union([ImageSchema, ImageSchema.array()]).transform((value) => {
                   return Array.isArray(value) ? value : [value]
                 }),
-                areaImage: ImageSchema
+                areaImage: ImageSchema.optional()
             })
               const {
                 name,
