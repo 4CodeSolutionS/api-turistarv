@@ -15,6 +15,7 @@ import Sentry from '@immobiliarelabs/fastify-sentry'
 import { AppError } from "./usecases/errors/app-error";
 import rateLimiter from '@fastify/rate-limit'
 import { campingRoutes } from "./http/controllers/campings/routes";
+import { authRoutes } from "./http/controllers/auth/route";
 
 export const fastifyApp = fastify()
 
@@ -69,6 +70,10 @@ fastifyApp.register(announcementsRoutes,{
 
 fastifyApp.register(campingRoutes,{
   prefix: 'api/campings'
+})
+
+fastifyApp.register(authRoutes,{
+  prefix: 'api/auth'
 })
 
 fastifyApp.setErrorHandler((error:FastifyError,request:FastifyRequest, reply: FastifyReply)=>{

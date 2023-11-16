@@ -32,7 +32,7 @@ export async function verifyTokenJWT(
         const storageInMemoryProvider = new RedisInMemoryProvider()
 
         const inBlackList = await storageInMemoryProvider.isTokenInBlackList(token)
-
+        console.log(inBlackList)
         if(inBlackList){
             throw new AppError('Token inválido', 401)
         }
