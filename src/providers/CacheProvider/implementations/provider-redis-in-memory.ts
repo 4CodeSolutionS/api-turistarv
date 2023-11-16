@@ -26,10 +26,6 @@ export class RedisInMemoryProvider implements ICacheProvider {
     async isTokenInBlackList(token: string) {
         const inBlackList = await redisClient.sIsMember('BLACKLIST', token)
 
-        if(!inBlackList){
-            return false
-        }
-
         return inBlackList
     }
     
